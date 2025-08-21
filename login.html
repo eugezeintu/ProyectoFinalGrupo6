@@ -13,15 +13,40 @@
     body {
       background-color: rgb(248, 249, 250);
     }
+    .login{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      align-items: center; /* Centra verticalmente */
+      width: 500px; /* Ancho del cuadro */
+      height: 250px; /* Altura del cuadro */
+      border: 1px solid black; /* Borde para visualizar el cuadro */
+      padding-block: 20px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
   </style>
 </head>
 
 <body>
   <main class="mt-5">
     <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
-      </div>
+      <div class="login">
+      <form class="form-inline">
+        <div class="form-group">
+        <label for="usuario">Usuario</label>
+          <input type="usuario" id="usuario" class="form-control mx-sm-3">
+  </div>
+      <form class="form-inline">
+        <div class="form-group">
+        <label for="inputPassword6">Contraseña</label>
+          <input type="password" id="inputPassword6" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+          <small id="passwordHelpInline" class="text-muted">
+            Debe contener entre 8-20 caracteres.
+          </small>
+  </div>
+  <button type="Ingresar" class="btn btn-primary">Ingresar</button>
     </div>
   </main>
   <footer class="text-muted">
