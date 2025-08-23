@@ -26,6 +26,10 @@ function mostrarProductos(products) {
                             <small class="text-muted">${product.soldCount} artículos</small>
                         </div>
                         <p class="mb-1">${product.description}</p>
+                        <br>
+                        <br>
+                        <br>
+                        <h4 class="mb-1">${product.currency+product.cost}</h4>
                     </div>
                 </div>
             </div>
