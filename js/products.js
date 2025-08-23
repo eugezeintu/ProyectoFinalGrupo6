@@ -15,15 +15,20 @@ function mostrarProductos(products) {
 
   for (let product of products) {
     contenedor.innerHTML += `
-      <div class="product-card">
-        <img src="${product.image}" alt="${product.name}">
-        <div>
-          <h4>${product.name}</h4>
-          <p>${product.description}</p>
-          <p><strong>Precio:</strong> ${product.currency} ${product.cost}</p>
-          <p><strong>Vendidos:</strong> ${product.soldCount}</p>
-        </div>
-      </div>
+       <div onclick="setCatID(${product.id})" class="list-group-item list-group-item-action cursor-active">
+                <div class="row">
+                    <div class="col-3">
+                        <img src="${product.image}" alt="${product.description}" class="img-thumbnail">
+                    </div>
+                    <div class="col">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 class="mb-1">${product.name}</h4>
+                            <small class="text-muted">${product.soldCount} artículos</small>
+                        </div>
+                        <p class="mb-1">${product.description}</p>
+                    </div>
+                </div>
+            </div>
     `;
   }
 }
