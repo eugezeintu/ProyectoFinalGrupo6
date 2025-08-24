@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("loginForm");
   const usuarioInput = document.getElementById("usuario");
-  const passwordInput = document.getElementById("inputPassword6");
+  const passwordInput = document.getElementById("password");
   const error = document.getElementById("error");
 
   form.addEventListener("submit", function (event) {
@@ -16,9 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
       error.textContent = "⚠️ La contraseña debe tener entre 8 y 20 caracteres.";
     } else {
       error.textContent = "";
-      // ✅ Redirige a la página de inicio
+      // Redirige a la página de inicio
       window.location.href = "index.html";
+      localStorage.setItem("user",usuario);
     }
   });
 });
-console.log("✅ login.js cargado correctamente");
+console.log("login.js cargado correctamente");
