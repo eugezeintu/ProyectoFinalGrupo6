@@ -1,3 +1,25 @@
+function autenticado() {
+    return localStorage.getItem('user') !== null; 
+}
+
+if (!autenticado()) {
+            window.location.href = "login.html";
+}
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+    let user = localStorage.getItem("user");
+
+    document.getElementById("sesion").textContent = "User  " + user;
+    document.getElementById("cerrarsesion").innerHTML += "Logout";
+    document.getElementById("cerrarsesion").addEventListener("click", function() {
+        localStorage.removeItem("user");
+        window.location = "login.html"
+    });
+
+    
+})
+
 const URL = "https://japceibal.github.io/emercado-api/cats_products/101.json"
 
     document.addEventListener("DOMContentLoaded", function () {
