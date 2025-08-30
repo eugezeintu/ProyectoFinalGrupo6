@@ -37,24 +37,22 @@ function mostrarProductos(products) {
 
   for (let product of products) {
     contenedor.innerHTML += `
-       <div onclick="setCatID(${product.id})" class="list-group-item list-group-item-action cursor-active">
-                <div class="row">
-                    <div class="col-3">
-                        <img src="${product.image}" alt="${product.description}" class="img-thumbnail">
-                    </div>
-                    <div class="col">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h4 class="mb-1">${product.name}</h4>
-                            <small class="text-muted">${product.soldCount} artículos</small>
-                        </div>
-                        <p class="mb-1">${product.description}</p>
-                        <br>
-                        <br>
-                        <br>
-                        <h4 class="mb-1">${product.currency+product.cost}</h4>
-                    </div>
-                </div>
-            </div>
-    `;
+                     <div class="col-sm-6 col-md-6 col-lg-4 mb-4">
+                     <div class="card mb-3" style="max-width: 540px; cursor: pointer;" onclick="setCatID(${product.id})">
+          <div class="row g-0">
+          <div class="col-md-4">
+      <img src="${product.image}" class="img-fluid rounded-start" alt="${product.description}">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+       <h5 class="card-title">${product.name}</h5>
+       <p class="card-text">${product.description}</p>
+       <p class="card-text"><strong>${product.currency} ${product.cost}</strong></p>
+       <p class="card-text"><small class="text-muted">${product.soldCount} vendidos</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
   }
-}
+  }
