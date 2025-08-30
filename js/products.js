@@ -37,7 +37,7 @@ function mostrarProductos(products) {
 
   for (let product of products) {
     contenedor.innerHTML += `
-                     <div class="col-12 col-sm-6 col-md-4 mb-4">
+                     <div class="col-sm-6 col-md-6 col-lg-4 mb-4">
                      <div class="card mb-3" style="max-width: 540px; cursor: pointer;" onclick="setCatID(${product.id})">
           <div class="row g-0">
           <div class="col-md-4">
