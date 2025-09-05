@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>eMercado - Todo lo que busques está aquí</title>
 
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
@@ -16,7 +16,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
     <div class="container">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegación">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -30,17 +30,37 @@
           <li class="nav-item">
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
+        </ul>
+        <ul class="navbar-nav device-width justify-content-between">
+            <a class="nav-link" id="sesion"></a>
+          </li>
           <li class="nav-item">
+            <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <main class="pb-5 container">
+   <main class="pb-5 container">
     <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+      <div class="text-center p-4">
+        <h1>Lista de Productos</h1>
       </div>
+
+      <div class="mb-3 text-center">
+        <button id="sortAsc" class="btn btn-outline-primary me-2">Menor precio</button>
+        <button id="sortDesc" class="btn btn-outline-primary me-2">Mayor precio</button>
+        <button id="sortBySold" class="btn btn-outline-primary">Más vendidos</button>
+      </div>
+
+      <div class="mb-3 text-center">
+        <input type="number" id="minPrice" placeholder="Precio mínimo" class="form-control d-inline w-auto me-2">
+        <input type="number" id="maxPrice" placeholder="Precio máximo" class="form-control d-inline w-auto me-2">
+        <button id="filterPrice" class="btn btn-success">Filtrar</button>
+        <button id="clearFilter" class="btn btn-secondary">Limpiar</button>
+      </div>
+
+      <div id="lista-productos" class="row"></div>
     </div>
   </main>
   <footer class="text-muted">
@@ -48,7 +68,7 @@
       <p class="float-end">
         <a href="#">Volver arriba</a>
       </p>
-      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jóvenes a Programar</a></p>
     </div>
   </footer>
   <div id="spinner-wrapper">
