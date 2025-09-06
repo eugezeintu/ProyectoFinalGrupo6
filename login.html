@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>eMercado - Todo lo que busques está aquí</title>
   
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
@@ -13,16 +13,84 @@
     body {
       background-color: rgb(248, 249, 250);
     }
+    .login{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      align-items: center; /* Centra verticalmente */
+      width: 500px; /* Ancho del cuadro */
+      height: 350px; /* Altura del cuadro */
+      border: 1px solid black; /* Borde para visualizar el cuadro */
+      padding-block: 20px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+        /* Tablet vertical */
+     @media (max-width: 1024px) {
+      .login {
+        width: 100%;
+        width: 450px;
+        height: 350px;
+        margin-top: 100px;
+        
+      }
+      #passwordHelpInline {
+        font-size:2vw;
+      }
+      #error {
+        font-size: 2vw;
+      }
+    }
+
+    /* Smartphone pequeño */
+    @media (max-width: 480px) {
+      .login {
+        width: 95%;
+        height: 100%;
+        padding: 20px;
+      }
+      .login form {
+        flex-direction: column;
+      }
+      .login label {
+        margin-top: 10px;
+      }
+      #passwordHelpInline {
+        font-size:4vw;
+      }
+      #error {
+        font-size: 4vw;
+      }
+      .float-end{
+        font-size: 4vw;
+      }
+      }
   </style>
 </head>
 
 <body>
   <main class="mt-5">
     <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
-      </div>
+      <div class="login">
+  <form id="loginForm" class="form-inline">
+    <div class="form-group">
+      <label for="usuario">Usuario</label>
+      <input type="text" id="usuario" class="form-control mx-sm-3">
     </div>
+    <div class="form-group mt-3">
+      <label for="inputPassword6">Contraseña</label>
+      <input type="password" id="password" class="form-control mx-sm-3"
+        aria-describedby="passwordHelpInline">
+      <small id="passwordHelpInline" class="text-muted">
+        Debe contener entre 8-20 caracteres.
+      </small>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary mt-3">Ingresar</button>
+  </form>
+  <p id="error" style="color: red; margin-top: 10px;"></p>
+</div>
   </main>
   <footer class="text-muted">
     <div class="container">

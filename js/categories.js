@@ -6,6 +6,28 @@ let currentSortCriteria = undefined;
 let minCount = undefined;
 let maxCount = undefined;
 
+function autenticado() {
+    return localStorage.getItem('user') !== null; 
+}
+
+if (!autenticado()) {
+            window.location.href = "login.html";
+}
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+    let user = localStorage.getItem("user");
+
+    document.getElementById("sesion").textContent = "User  " + user;
+    document.getElementById("cerrarsesion").innerHTML += "Logout";
+    document.getElementById("cerrarsesion").addEventListener("click", function() {
+        localStorage.removeItem("user");
+        window.location = "login.html"
+    });
+
+    
+})
+
 function sortCategories(criteria, array){
     let result = [];
     if (criteria === ORDER_ASC_BY_NAME)
