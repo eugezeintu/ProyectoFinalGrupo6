@@ -30,16 +30,12 @@
           <li class="nav-item">
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
-          <li class="nav-item">
-          </li>
         </ul>
         <ul class="navbar-nav device-width justify-content-between">
             <a class="nav-link" id="sesion"></a>
           </li>
           <li class="nav-item">
             <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
-          </li>
-          <li class="nav-item">
           </li>
         </ul>
       </div>
@@ -48,9 +44,23 @@
    <main class="pb-5 container">
     <div class="container">
       <div class="text-center p-4">
-     <h1>Lista de Productos</h1>
-     </div>
-     <div id="lista-productos" class="row"></div>
+        <h1>Lista de Productos</h1>
+      </div>
+
+      <div class="mb-3 text-center">
+        <button id="sortAsc" class="btn btn-outline-primary me-2">Menor precio</button>
+        <button id="sortDesc" class="btn btn-outline-primary me-2">Mayor precio</button>
+        <button id="sortBySold" class="btn btn-outline-primary">Más relevantes</button>
+      </div>
+
+      <div class="mb-3 text-center">
+        <input type="number" id="minPrice" placeholder="Precio mínimo" class="form-control d-inline w-auto me-2">
+        <input type="number" id="maxPrice" placeholder="Precio máximo" class="form-control d-inline w-auto me-2">
+        <button id="filterPrice" class="btn btn-success">Filtrar</button>
+        <button id="clearFilter" class="btn btn-secondary">Limpiar</button>
+      </div>
+
+      <div id="lista-productos" class="row"></div>
     </div>
   </main>
   <footer class="text-muted">
