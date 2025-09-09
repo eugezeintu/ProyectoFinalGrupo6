@@ -96,7 +96,22 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       mostrarProductos(filtered);
+      
   });
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+
+    const searchResultsDiv = document.getElementById('searchResults');
+    const searchTerm = searchInput.value.toLowerCase(); // Para búsqueda insensible a mayúsculas
+
+    const resultadosfiltrados = currentProducts.filter(item =>
+    item.name.toLowerCase().includes(searchTerm) ||
+    item.description.toLowerCase().includes(searchTerm)
+    );
+
+    mostrarProductos(resultadosfiltrados)
+    
+     })
 
   document.getElementById("clearFilter").addEventListener("click", function(){
       document.getElementById("minPrice").value = "";
@@ -104,3 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
       mostrarProductos(currentProducts);
   });
 });
+
+    
+
