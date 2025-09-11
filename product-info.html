@@ -30,8 +30,6 @@
           <li class="nav-item">
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
-          <li class="nav-item">
-          </li>
         </ul>
         <ul class="navbar-nav device-width justify-content-between">
             <a class="nav-link" id="sesion"></a>
@@ -39,19 +37,27 @@
           <li class="nav-item">
             <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
           </li>
-          <li class="nav-item">
-          </li>
         </ul>
       </div>
     </div>
   </nav>
+  
   <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
-      </div>
+    <div class="container mt-4">
+      <div id="product-container" class="row"></div>
     </div>
   </main>
+
+  <main>
+  <div class="container mt-4">
+    <div id="product-container" class="row mb-5"></div>
+
+    <h3 class="mb-3">Productos relacionados</h3>
+    <div id="related-container" class="row"></div>
+  </div>
+</main>
+
+  
   <footer class="text-muted">
     <div class="container">
       <p class="float-end">
@@ -60,6 +66,7 @@
       <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
     </div>
   </footer>
+  
   <div id="spinner-wrapper">
     <div class="lds-ring">
       <div></div>
@@ -68,9 +75,9 @@
       <div></div>
     </div>
   </div>
+  
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/product-info.js"></script>
 </body>
-
 </html>

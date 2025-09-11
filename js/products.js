@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded",()=> {
     let user = localStorage.getItem("user");
 
     document.getElementById("sesion").textContent = "User " + user;
-    document.getElementById("cerrarsesion").innerHTML += "Logout";
+    document.getElementById("cerrarsesion").innerHTML = "Logout";
     document.getElementById("cerrarsesion").addEventListener("click", function() {
         localStorage.removeItem("user");
         window.location = "login.html"
@@ -63,6 +63,12 @@ function mostrarProductos(products) {
   }
 }
 
+// 👉 Nueva función para guardar ID y redirigir
+function setCatID(id) {
+  localStorage.setItem("selectedProductID", id);
+  window.location = "product-info.html";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   getJSONData(URL).then(function (resultObj) {
     if (resultObj.status === "ok") {
@@ -99,19 +105,14 @@ document.addEventListener("DOMContentLoaded", function () {
       
   });
 
-    document.getElementById("searchInput").addEventListener("input", function() {
-
-    const searchResultsDiv = document.getElementById('searchResults');
-    const searchTerm = searchInput.value.toLowerCase(); // Para búsqueda insensible a mayúsculas
-
+  document.getElementById("searchInput").addEventListener("input", function() {
+    const searchTerm = searchInput.value.toLowerCase();
     const resultadosfiltrados = currentProducts.filter(item =>
-    item.name.toLowerCase().includes(searchTerm) ||
-    item.description.toLowerCase().includes(searchTerm)
+      item.name.toLowerCase().includes(searchTerm) ||
+      item.description.toLowerCase().includes(searchTerm)
     );
-
-    mostrarProductos(resultadosfiltrados)
-    
-     })
+    mostrarProductos(resultadosfiltrados);
+  });
 
   document.getElementById("clearFilter").addEventListener("click", function(){
       document.getElementById("minPrice").value = "";
@@ -119,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
       mostrarProductos(currentProducts);
   });
 });
+
+
 
     
 
