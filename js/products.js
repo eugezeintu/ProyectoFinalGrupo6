@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded",()=> {
     });
 });
 
-const URL = "https://japceibal.github.io/emercado-api/cats_products/101.json"
+const categoria = localStorage.getItem("catID");
+const URL = PRODUCTS_URL+categoria+".json"
 
 let currentProducts = [];
 
