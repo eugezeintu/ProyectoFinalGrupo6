@@ -1,3 +1,7 @@
+// Variables globales
+let productData = null;
+let commentsData = [];
+
 function autenticado() {
     return localStorage.getItem('user') !== null; 
 }
@@ -22,15 +26,29 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Construir la URL de detalle del producto
-    const URL = `https://japceibal.github.io/emercado-api/products/${productID}.json`;
+    // Construir las URLs
+    const productURL = `https://japceibal.github.io/emercado-api/products/${productID}.json`;
+    const commentsURL = `https://japceibal.github.io/emercado-api/products_comments/${productID}.json`;
 
-    getJSONData(URL).then(resultObj => {
-        if (resultObj.status === "ok") {
-            mostrarProducto(resultObj.data);
-            mostrarRelacionados(resultObj.data.relatedProducts);
+    // Cargar datos del producto y comentarios
+    Promise.all([
+        getJSONData(productURL),
+        getJSONData(commentsURL)
+    ]).then(([productResult, commentsResult]) => {
+        if (productResult.status === "ok") {
+            productData = productResult.data;
+            mostrarProducto(productData);
+            mostrarRelacionados(productData.relatedProducts);
+        }
+        
+        if (commentsResult.status === "ok") {
+            commentsData = commentsResult.data;
+            mostrarComentarios(commentsData);
         }
     });
+
+    // Configurar formulario de calificación
+    configurarFormularioCalificacion();
 });
 
 // Renderizar el producto principal con galería
@@ -75,27 +93,151 @@ function mostrarProducto(product) {
     if (firstImg) firstImg.classList.add("border", "border-primary");
 }
 
-// Renderizar productos relacionados
-function mostrarRelacionados(related) {
-    const contenedor = document.getElementById("related-container");
+// Mostrar comentarios y calificaciones
+function mostrarComentarios(comments) {
+    const contenedor = document.getElementById("comments-container");
     contenedor.innerHTML = "";
 
-    related.forEach(prod => {
+    if (!comments || comments.length === 0) {
+        contenedor.innerHTML = '<p class="text-muted">No hay calificaciones disponibles.</p>';
+        return;
+    }
+
+    comments.forEach(comment => {
+        const starsHTML = generarEstrellas(comment.score);
+        const fecha = new Date(comment.dateTime);
+        
         contenedor.innerHTML += `
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-          <div class="card h-100 shadow-sm" style="cursor:pointer;" onclick="verProducto(${prod.id})">
-            <img src="${prod.image}" class="card-img-top" alt="${prod.name}">
-            <div class="card-body">
-              <h5 class="card-title">${prod.name}</h5>
+        <div class="comment-card card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="card-title mb-1">${comment.user}</h6>
+                <small class="text-muted">${fecha.toLocaleDateString('es-ES')} - ${fecha.toLocaleTimeString('es-ES')}</small>
+              </div>
+              <div class="rating-display">
+                ${starsHTML}
+              </div>
             </div>
+            <p class="card-text">${comment.description}</p>
           </div>
         </div>
         `;
     });
 }
 
+// Generar estrellas para mostrar calificación
+function generarEstrellas(rating) {
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            stars += '<span class="star-filled">★</span>';
+        } else {
+            stars += '<span class="star-empty">★</span>';
+        }
+    }
+    return stars;
+}
+
+// Configurar el formulario de calificación
+function configurarFormularioCalificacion() {
+    const form = document.getElementById('rating-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const commentText = document.getElementById('comment-text').value;
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const user = localStorage.getItem("user");
+        
+        if (!rating) {
+            alert('Por favor, selecciona una calificación.');
+            return;
+        }
+
+        if (!commentText.trim()) {
+            alert('Por favor, escribe un comentario.');
+            return;
+        }
+
+        // Crear nuevo comentario
+        const newComment = {
+            user: user,
+            dateTime: new Date().toISOString(),
+            description: commentText,
+            score: parseInt(rating.value)
+        };
+
+        // Agregar al inicio del array de comentarios
+        commentsData.unshift(newComment);
+        
+        // Actualizar la vista
+        mostrarComentarios(commentsData);
+        
+        // Limpiar formulario
+        form.reset();
+        
+        // Mostrar mensaje de éxito
+        mostrarMensaje('¡Tu calificación ha sido enviada exitosamente!', 'success');
+    });
+}
+
+// Función para mostrar mensajes
+function mostrarMensaje(mensaje, tipo = 'info') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    // Auto-ocultar después de 3 segundos
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+
+// Renderizar productos relacionados
+function mostrarRelacionados(related) {
+    const contenedor = document.getElementById("related-container");
+    contenedor.innerHTML = "";
+
+    if (!related || related.length === 0) {
+        contenedor.innerHTML = '<p class="text-muted">No hay productos relacionados disponibles.</p>';
+        return;
+    }
+
+    related.forEach(prod => {
+        contenedor.innerHTML += `
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 shadow-sm product-related-card" style="cursor:pointer;" onclick="verProducto(${prod.id})">
+            <img src="${prod.image}" class="card-img-top" alt="${prod.name}" 
+                 style="height: 200px; object-fit: cover;">
+            <div class="card-body d-flex align-items-center justify-content-center">
+              <h6 class="card-title text-center mb-0">${prod.name}</h6>
+            </div>
+          </div>
+        </div>
+        `;
+    });
+
+    // Agregar efecto hover a las cards de productos relacionados
+    document.querySelectorAll('.product-related-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+}
+
 // Cuando se hace clic en un producto relacionado
 function verProducto(id) {
     localStorage.setItem("selectedProductID", id);
-    window.location = "product-info.html"; // recarga la misma página con el nuevo producto
+    window.location = "product-info.html";
 }
