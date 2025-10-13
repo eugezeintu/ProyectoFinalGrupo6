@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>eMercado - Todo lo que busques está aquí</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  
+  <style>
+    .rating-stars {
+      color: #ffc107;
+    }
+    
+    .rating-input {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 0.2rem;
+      justify-content: flex-end;
+    }
+    
+    .rating-input input[type="radio"] {
+      display: none;
+    }
+    
+    .rating-input label {
+      font-size: 1.5rem;
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .rating-input label:hover,
+    .rating-input label:hover ~ label,
+    .rating-input input[type="radio"]:checked ~ label {
+      color: #ffc107;
+    }
+    
+    .comment-card {
+      border-left: 4px solid #007bff;
+      background-color: #f8f9fa;
+    }
+    
+    .rating-display {
+      display: inline-flex;
+      gap: 2px;
+    }
+    
+    .star-filled {
+      color: #ffc107;
+    }
+    
+    .star-empty {
+      color: #ddd;
+    }
+
+    .product-related-card:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav w-100 justify-content-between">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html">Categorías</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sell.html">Vender</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav device-width justify-content-between">
+          <li class="nav-item">
+            <a class="nav-link" id="sesion"></a>
+          </li>
+          <li class="nav-item">
+            <a style="color:brown" class="nav-link" id="cerrarsesion" href=""></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <main>
+    <div class="container mt-4">
+      <!-- Información del producto -->
+      <div id="product-container" class="row mb-5"></div>
+
+      <!-- Productos relacionados -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h3 class="mb-4">
+            <i class="fa fa-th-large text-success"></i>
+            Productos relacionados
+          </h3>
+          <div id="related-container" class="row"></div>
+        </div>
+      </div>
+
+      <!-- Sección de calificaciones -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h3 class="mb-4">
+            <i class="fa fa-star text-warning"></i>
+            Calificaciones de usuarios
+          </h3>
+          <div id="comments-container">
+            <!-- Las calificaciones se cargarán aquí dinámicamente -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario para calificar -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h3 class="mb-4">
+            <i class="fa fa-edit text-primary"></i>
+            Califica este producto
+          </h3>
+          <div class="card shadow">
+            <div class="card-body">
+              <form id="rating-form">
+                <div class="mb-3">
+                  <label for="comment-text" class="form-label fw-bold">Tu comentario:</label>
+                  <textarea class="form-control" id="comment-text" rows="4" 
+                           placeholder="Escribe tu opinión sobre este producto..." required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Calificación:</label>
+                  <div class="rating-input mt-2">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" title="5 estrellas">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 estrellas">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 estrellas">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 estrellas">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 estrella">★</label>
+                  </div>
+                  <small class="form-text text-muted">Selecciona tu calificación del 1 al 5</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fa fa-paper-plane"></i>
+                  Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-muted">
+    <div class="container">
+      <p class="float-end">
+        <a href="#">Volver arriba</a>
+      </p>
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
+    </div>
+  </footer>
+  
+  <div id="spinner-wrapper">
+    <div class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/product-info.js"></script>
+</body>
+</html>
