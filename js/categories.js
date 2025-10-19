@@ -29,6 +29,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     
 })
 
+document.addEventListener("DOMContentLoaded",()=>{
+    let  theme = localStorage.getItem("theme");
+    const html = document.documentElement;
+    if (theme = "dark" ) {
+        html.setAttribute('data-theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+    }})
+
 function toggleThemeCheckbox() {
     const checkbox = document.getElementById('themeSwitch');
     const html = document.documentElement;
