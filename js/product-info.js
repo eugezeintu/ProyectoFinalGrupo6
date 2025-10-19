@@ -69,14 +69,15 @@ function toggleThemeCheckbox() {
     }
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-    let  theme = localStorage.getItem("theme");
-    const html = document.documentElement;
-    if (theme = "dark" ) {
-        html.setAttribute('data-theme', 'dark');
-    } else {
-        html.setAttribute('data-theme', 'light');
-    }})
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('themeSwitch');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
 
 // Renderizar el producto principal con galería
 function mostrarProducto(product) {

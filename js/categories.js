@@ -29,14 +29,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     
 })
 
-document.addEventListener("DOMContentLoaded",()=>{
-    let  theme = localStorage.getItem("theme");
-    const html = document.documentElement;
-    if (theme = "dark" ) {
-        html.setAttribute('data-theme', 'dark');
-    } else {
-        html.setAttribute('data-theme', 'light');
-    }})
 
 function toggleThemeCheckbox() {
     const checkbox = document.getElementById('themeSwitch');
@@ -51,6 +43,16 @@ function toggleThemeCheckbox() {
         localStorage.setItem('theme', 'light');
     }
 }
+
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('themeSwitch');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
 
 function sortCategories(criteria, array){
     let result = [];
