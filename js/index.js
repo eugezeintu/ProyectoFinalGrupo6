@@ -35,14 +35,6 @@ function toggleThemeCheckbox() {
     }
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-    let  theme = localStorage.getItem("theme");
-    if (theme = "dark" ) {
-        html.setAttribute('data-theme', 'dark');
-    } else {
-        html.setAttribute('data-theme', 'light');
-    }})
-
 // Cargar estado al iniciar
 document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('theme') || 'light';

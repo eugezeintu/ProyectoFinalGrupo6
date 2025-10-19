@@ -10,9 +10,6 @@
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
   <style>
-    body {
-      background-color: rgb(248, 249, 250);
-    }
     .login{
       display: block;
       margin-left: auto;
@@ -70,6 +67,22 @@
 </head>
 
 <body>
+  <div class="form-check form-switch d-flex justify-content-end" 
+            style="position: fixed; top: 80px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <input class="form-check-input" 
+           type="checkbox" 
+           id="themeSwitch"
+           style="width: 40px;
+            height: 25px;"
+           onchange="toggleThemeCheckbox()">
+    <label class="form-check-label" for="themeSwitch">
+        <i class="fas fa-moon"></i> Modo Oscuro
+    </label>
+</div>
   <main class="mt-5">
     <div class="container">
       <div class="login">
@@ -103,6 +116,8 @@
       <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
     </div>
   </footer>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/init.js"></script>
   <script src="js/login.js"></script>
 </body>
 

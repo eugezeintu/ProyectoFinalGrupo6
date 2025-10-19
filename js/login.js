@@ -25,3 +25,27 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 console.log("login.js cargado correctamente");
+
+function toggleThemeCheckbox() {
+    const checkbox = document.getElementById('themeSwitch');
+    const html = document.documentElement;
+    
+    // Si está marcado = modo oscuro, si no = modo claro
+    if (checkbox.checked) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('themeSwitch');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
