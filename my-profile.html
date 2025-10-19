@@ -3,34 +3,138 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Formulario de Perfil</title>
-  <link rel="stylesheet" href="my-profile.css">
+  <link rel="stylesheet" href="css/my-profile.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+      <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css" rel="stylesheet">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>eMercado - Todo lo que busques está aquí</title>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+  </style>
 
 </head>
 <body>
-  <h2>PERFIL SIMPLE</h2>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav w-100 justify-content-between">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html">Categorías</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sell.html">Vender</a>
+          </li>
+          <li class="nav-item">
+          </li>
+        </ul> <!--
+        <ul class="navbar-nav device-width justify-content-between">
+            <a class="nav-link" id="sesion"></a>
+          </li>
+          <li class="nav-item">
+            <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
+          </li>
+          <li class="nav-item">
+          </li>
+        </ul>
+        -->
+      </div>
+          <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown">
+    <i id="sesion"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" id="perfil">
+      Perfil
+      </a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" id="cerrarsesion">
+        Cerrar sesión
+      </a>
+    </li>
+  </ul>
+</div>  
+    </div>
+  </nav>
+<div class="form-check form-switch d-flex justify-content-end" 
+            style="position: fixed; top: 80px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <input class="form-check-input" 
+           type="checkbox" 
+           id="themeSwitch"
+           style="width: 40px;
+            height: 25px;"
+           onchange="toggleThemeCheckbox()">
+    <label class="form-check-label" for="themeSwitch">
+        <i class="fas fa-moon"></i> Modo Oscuro
+    </label>
+</div>
+
+  <div class="text-center p-4">
+    <i class="fa fa-user-circle fa-8x" aria-hidden="true"></i>
+    <br>
+      <h2>Mi Perfil</h2>
+    </div>
 
   <div class="contenedor">
     <form id="perfilForm">
       <div class="fila">
         <img id="preview" src="" alt="Sin foto">
         <div class="inputs">
-          <input id="nombre" placeholder="Nombre" required>
+          <i class="fw-bold" id="usuarioperfil"></i>
+          <input id="nombre" placeholder="Nombre">
           <input id="apellido"placeholder="Apellido">
-          <input id="email" placeholder="Email">
           <input id="telefono" placeholder="Teléfono">
           <input id="foto" type="file" accept="image/*">
         </div>
       </div>
 
-      <button type="submit">Guardar</button>
-      <button type="button" id="cargarBtn">Cargar</button>
-      <button type="button" id="modoBtn">Modo Oscuro/Claro</button>
+      <button type="submit"class="btn btn-primary mt-3" >Guardar</button>
+      <br>
       <p id="mensaje"></p>
     </form>
   </div>
 
+<!--
   <script>
     const KEY = "perfilSimple_v1";
     const form = document.getElementById("perfilForm");
@@ -89,9 +193,6 @@
       setTimeout(()=> msg.textContent = "", 1800);
     });
 
-    // Modo oscuro/claro
-    modoBtn.addEventListener("click", () => document.body.classList.toggle("dark"));
-
     // Cargar automáticamente al abrir la página
     window.addEventListener("DOMContentLoaded", () => {
       const raw = localStorage.getItem(KEY);
@@ -104,5 +205,17 @@
       preview.src = imagenBase64 || "";
     });
   </script>
+  -->
+  <footer class="text-muted">
+    <div class="container">
+      <p class="float-end">
+        <a href="#">Volver arriba</a>
+      </p>
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
+    </div>
+  </footer>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/my-profile.js"></script>
 </body>
 </html>

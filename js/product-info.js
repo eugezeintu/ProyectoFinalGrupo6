@@ -12,11 +12,13 @@ if (!autenticado()) {
 
 document.addEventListener("DOMContentLoaded", () => {
     let user = localStorage.getItem("user");
-    document.getElementById("sesion").textContent = "User " + user;
-    document.getElementById("cerrarsesion").innerHTML = "Logout";
-    document.getElementById("cerrarsesion").addEventListener("click", function () {
+
+    document.getElementById("sesion").textContent = user;
+    document.getElementById("perfil").addEventListener("click", function() {
+        window.location = "my-profile.html"});
+    document.getElementById("cerrarsesion").addEventListener("click", function() {
         localStorage.removeItem("user");
-        window.location = "login.html";
+        window.location = "login.html"
     });
 
     // Recuperar el ID del producto
@@ -50,6 +52,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Configurar formulario de calificación
     configurarFormularioCalificacion();
 });
+
+function toggleThemeCheckbox() {
+    const checkbox = document.getElementById('themeSwitch');
+    const html = document.documentElement;
+    
+    // Si está marcado = modo oscuro, si no = modo claro
+    if (checkbox.checked) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+}
 
 // Renderizar el producto principal con galería
 function mostrarProducto(product) {
