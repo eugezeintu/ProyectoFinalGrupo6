@@ -32,7 +32,7 @@
           </li>
           <li class="nav-item">
           </li>
-        </ul>
+        </ul><!--
         <ul class="navbar-nav device-width justify-content-between">
             <a class="nav-link" id="sesion"></a>
           </li>
@@ -41,10 +41,48 @@
           </li>
           <li class="nav-item">
           </li>
-        </ul>
-      </div>
-    </div>
+        </ul>-->
+            </div>
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown">
+    <i id="sesion"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" id="perfil">
+      Perfil
+      </a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" id="cerrarsesion">
+        Cerrar sesión
+      </a>
+    </li>
+  </ul>
+</div>  
+</div>
+    
+    
   </nav>
+<div class="form-check form-switch d-flex justify-content-end" 
+            style="position: fixed; top: 80px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <input class="form-check-input" 
+           type="checkbox" 
+           id="themeSwitch"
+           style="width: 40px;
+            height: 25px;"
+           onchange="toggleThemeCheckbox()">
+    <label class="form-check-label" for="themeSwitch">
+        <i class="fas fa-moon"></i> Modo Oscuro
+    </label>
+</div>
   <main class="pb-5">
     <div class="text-center p-4">
       <h2>Categorías</h2>
