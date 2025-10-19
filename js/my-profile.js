@@ -22,6 +22,18 @@ document.addEventListener("DOMContentLoaded",()=>{
 })
 
 document.addEventListener("DOMContentLoaded",()=>{
+    let  theme = localStorage.getItem("theme");
+    const html = document.documentElement;
+    if (theme = "dark" ) {
+        html.setAttribute('data-theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+    }})
+
+
+
+
+document.addEventListener("DOMContentLoaded",()=>{
     let user = localStorage.getItem("user");
 
     document.getElementById("usuarioperfil").textContent = "Usuario: " + user;
