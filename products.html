@@ -1,127 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>eMercado - Todo lo que busques está aquí</title>
 
-  <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+  <!-- Estilos -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,700,900" rel="stylesheet">
   <link href="css/font-awesome.min.css" rel="stylesheet">
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
+
+  <style>
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #dc3545;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-card {
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-add-cart {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
     <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav w-100 justify-content-between">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="categories.html">Categorías</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="sell.html">Vender</a>
-          </li>
-        </ul><!--
-        <ul class="navbar-nav device-width justify-content-between">
-            <a class="nav-link" id="sesion"></a>
-          </li>
-          <li class="nav-item">
-            <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
-          </li>
-        </ul>-->
-      </div>
-    <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" 
-          type="button" 
-          data-bs-toggle="dropdown">
-    <i id="sesion"></i>
-  </button>
-  <ul class="dropdown-menu">
-    <li>
-      <a class="dropdown-item" id="perfil">
-      Perfil
-      </a>
-    </li>
-    <li><hr class="dropdown-divider"></li>
-    <li>
-      <a class="dropdown-item" id="cerrarsesion">
-        Cerrar sesión
-      </a>
-    </li>
-  </ul>
-</div>  
-</div>
-    
-    
-  </nav>
-   <div class="form-check form-switch d-flex justify-content-end" 
-            style="position: fixed; top: 80px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;">
-    <input class="form-check-input" 
-           type="checkbox" 
-           id="themeSwitch"
-           style="width: 40px;
-            height: 25px;"
-           onchange="toggleThemeCheckbox()">
-    <label class="form-check-label" for="themeSwitch">
-        <i class="fas fa-moon"></i> Modo Oscuro
-    </label>
-</div>
-   <main class="pb-5 container">
-    <div class="container">
-      <div class="text-center p-4">
-        <h1>Lista de Productos</h1>
+          <li><a class="nav-link" href="index.html">Inicio</a></li>
+          <li><a class="nav-link" href="categories.html">Categorías</a></li>
+          <li><a class="nav-link" href="sell.html">Vender</a></li>
+        </ul>
       </div>
 
-      <div class="mb-3 text-center">
-        <button id="sortAsc" class="btn btn-outline-primary me-2">Menor precio</button>
-        <button id="sortDesc" class="btn btn-outline-primary me-2">Mayor precio</button>
-        <button id="sortBySold" class="btn btn-outline-primary">Más relevantes</button>
-        <input id="searchInput" type="search" placeholder="Buscar" class="form-control d-inline w-auto me-2">
-          <div id="searchResults"> </div>
+      <div class="position-relative me-3">
+        <button class="btn btn-outline-light" onclick="location.href='carrito.html'">
+          <i class="fa fa-shopping-cart"></i>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </button>
       </div>
 
-      <div class="mb-3 text-center">
-        <input type="number" id="minPrice" placeholder="Precio mínimo" class="form-control d-inline w-auto me-2">
-        <input type="number" id="maxPrice" placeholder="Precio máximo" class="form-control d-inline w-auto me-2">
-        <button id="filterPrice" class="btn btn-success">Filtrar</button>
-        <button id="clearFilter" class="btn btn-secondary">Limpiar</button>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+          <i id="sesion"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" id="perfil">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" id="cerrarsesion">Cerrar sesión</a></li>
+        </ul>
       </div>
-
-      <div id="lista-productos" class="row"></div>
     </div>
+  </nav>
+
+  <!-- Modo oscuro -->
+  <div class="form-check form-switch position-fixed" style="top:80px;right:20px;">
+    <input class="form-check-input" type="checkbox" id="themeSwitch" onchange="toggleThemeCheckbox()" style="width:40px;height:25px;">
+    <label class="form-check-label" for="themeSwitch"><i class="fas fa-moon"></i> Modo Oscuro</label>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="pb-5 container">
+    <div class="text-center p-4"><h1>Lista de Productos</h1></div>
+
+    <div class="mb-3 text-center">
+      <button id="sortAsc" class="btn btn-outline-primary me-2">Menor precio</button>
+      <button id="sortDesc" class="btn btn-outline-primary me-2">Mayor precio</button>
+      <button id="sortBySold" class="btn btn-outline-primary">Más relevantes</button>
+      <input id="searchInput" type="search" placeholder="Buscar" class="form-control d-inline w-auto ms-2">
+      <div id="searchResults"></div>
+    </div>
+
+    <div class="mb-3 text-center">
+      <input type="number" id="minPrice" placeholder="Precio mínimo" class="form-control d-inline w-auto me-2">
+      <input type="number" id="maxPrice" placeholder="Precio máximo" class="form-control d-inline w-auto me-2">
+      <button id="filterPrice" class="btn btn-success me-2">Filtrar</button>
+      <button id="clearFilter" class="btn btn-secondary">Limpiar</button>
+    </div>
+
+    <div id="lista-productos" class="row"></div>
   </main>
-  <footer class="text-muted">
+
+  <!-- Footer -->
+  <footer class="text-muted text-center mt-5">
     <div class="container">
-      <p class="float-end">
-        <a href="#">Volver arriba</a>
-      </p>
-      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a></p>
+      <p><a href="#">Volver arriba</a></p>
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jóvenes a Programar</a></p>
     </div>
   </footer>
-  <div id="spinner-wrapper">
-    <div class="lds-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+
+  <!-- Spinner -->
+  <div id="spinner-wrapper" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+
+  <!-- Scripts -->
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/carrito.js"></script>
   <script src="js/products.js"></script>
 </body>
-
 </html>
