@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - eMercado</title>
+
+  <!-- Estilos -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,700,900" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #212529;
+      --card-bg: #f8f9fa;
+      --border-color: #dee2e6;
+    }
+
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #eaeaea;
+      --card-bg: #1f1f1f;
+      --border-color: #333;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-color: var(--border-color);
+    }
+
+    .navbar-dark.bg-dark {
+      background-color: #212529 !important;
+    }
+
+    .navbar-light.bg-light {
+      background-color: #f8f9fa !important;
+    }
+
+    .cart-badge {
+      position: absolute; top: -8px; right: -8px;
+      background: #dc3545; color: #fff;
+      border-radius: 50%; width: 20px; height: 20px;
+      font-size: 12px; display: flex; align-items: center; justify-content: center;
+    }
+
+    .cart-item-image { width: 80px; height: 80px; object-fit: cover; }
+    .cart-total { font-weight: bold; font-size: 1.3rem; }
+    .empty-cart { text-align: center; padding: 3rem; }
+    .quantity-controls { display: flex; align-items: center; gap: 10px; }
+
+    /* Estilo del interruptor de modo oscuro */
+    .form-check-input {
+      cursor: pointer;
+      width: 2.5em;
+      height: 1.3em;
+    }
+
+    .form-check-label {
+      cursor: pointer;
+      margin-left: 0.3em;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav w-100 justify-content-between align-items-center">
+          <div class="d-flex gap-3 align-items-center">
+            <li><a class="nav-link" href="index.html">Inicio</a></li>
+            <li><a class="nav-link" href="categories.html">Categorías</a></li>
+            <li><a class="nav-link" href="sell.html">Vender</a></li>
+          </div>
+
+          <!-- Interruptor de modo oscuro -->
+          <div class="form-check form-switch text-white ms-3">
+            <input class="form-check-input" type="checkbox" id="theme-toggle">
+            <label class="form-check-label" for="theme-toggle">Modo Oscuro</label>
+          </div>
+        </ul>
+      </div>
+
+      <div class="position-relative me-3">
+        <button class="btn btn-outline-light" onclick="location.href='carrito.html'">
+          <i class="fa fa-shopping-cart"></i>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </button>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+          <i id="sesion"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" id="perfil">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" id="cerrarsesion">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="container mt-4">
+    <h1 class="mb-4"><i class="fa fa-shopping-cart text-primary"></i> Mi Carrito de Compras</h1>
+
+    <div id="cart-container"></div>
+
+    <div class="card mt-4">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center gap-3">
+            <h4 class="cart-total mb-0">
+              Total: <span id="cart-total">0</span>
+            </h4>
+            <div class="d-flex align-items-center gap-2">
+              <label for="currency-select" class="form-label mb-0">Moneda:</label>
+              <select id="currency-select" class="form-select form-select-sm" style="width: auto;">
+                <option value="USD">USD</option>
+                <option value="UYU">UYU</option>
+              </select>
+            </div>
+          </div>
+          <small class="text-muted" id="cart-items-count">0 productos</small>
+        </div>
+        <div class="d-flex gap-2">
+          <button id="continue-shopping" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left"></i> Seguir Comprando
+          </button>
+          <button id="checkout-btn" class="btn btn-success btn-lg">
+            <i class="fa fa-credit-card"></i> Finalizar Compra
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-muted text-center mt-5">
+    <div class="container">
+      <p><a href="#">Volver arriba</a></p>
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jóvenes a Programar</a></p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/carrito.js"></script>
+</body>
+</html>
