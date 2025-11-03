@@ -12,37 +12,9 @@
   <link href="css/styles.css" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #212529;
-      --card-bg: #f8f9fa;
-      --border-color: #dee2e6;
-    }
-
-    body.dark-mode {
-      --bg-color: #121212;
-      --text-color: #eaeaea;
-      --card-bg: #1f1f1f;
-      --border-color: #333;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
     .card {
       background-color: var(--card-bg);
       border-color: var(--border-color);
-    }
-
-    .navbar-dark.bg-dark {
-      background-color: #212529 !important;
-    }
-
-    .navbar-light.bg-light {
-      background-color: #f8f9fa !important;
     }
 
     .cart-badge {
@@ -56,70 +28,86 @@
     .cart-total { font-weight: bold; font-size: 1.3rem; }
     .empty-cart { text-align: center; padding: 3rem; }
     .quantity-controls { display: flex; align-items: center; gap: 10px; }
-
-    /* Estilo del interruptor de modo oscuro */
-    .form-check-input {
-      cursor: pointer;
-      width: 2.5em;
-      height: 1.3em;
-    }
-
-    .form-check-label {
-      cursor: pointer;
-      margin-left: 0.3em;
-    }
   </style>
 </head>
 
 <body>
   <!-- Navbar -->
-  <nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
     <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-    <div class="form-check form-switch d-flex justify-content-end" 
-     style="position: fixed; top: 80px;
-     right: 20px;
-     display: flex;
-     align-items: center;
-     justify-content: center;">
-  <input class="form-check-input" 
-         type="checkbox" 
-         id="theme-toggle"
-         style="width: 40px; height: 25px;">
-  <label class="form-check-label" for="theme-toggle">
-      <i class="fas fa-moon"></i> Modo Oscuro
-  </label>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav w-100 justify-content-between">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="categories.html">Categorías</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sell.html">Vender</a>
+          </li>
+          <li class="nav-item">
+          </li>
+        </ul> <!--
+        <ul class="navbar-nav device-width justify-content-between">
+            <a class="nav-link" id="sesion"></a>
+          </li>
+          <li class="nav-item">
+            <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
+          </li>
+          <li class="nav-item">
+          </li>
+        </ul>
+        -->
+      </div>
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown">
+    <i id="sesion"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" id="perfil">
+      Perfil
+      </a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item" id="cerrarsesion">
+        Cerrar sesión
+      </a>
+    </li>
+  </ul>
+</div>  
 </div>
-
-        </ul>
-      </div>
-
-      <div class="position-relative me-3">
-        <button class="btn btn-outline-light" onclick="location.href='carrito.html'">
-          <i class="fa fa-shopping-cart"></i>
-          <span id="cart-badge" class="cart-badge">0</span>
-        </button>
-      </div>
-
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
-          <i id="sesion"></i>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" id="perfil">Perfil</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" id="cerrarsesion">Cerrar sesión</a></li>
-        </ul>
-      </div>
-    </div>
+    
+    
   </nav>
+   <div class="form-check form-switch d-flex justify-content-end" 
+            style="position: fixed; top: 80px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <input class="form-check-input" 
+           type="checkbox" 
+           id="themeSwitch"
+           style="width: 40px;
+            height: 25px;"
+           onchange="toggleThemeCheckbox()">
+    <label class="form-check-label" for="themeSwitch">
+        <i class="fas fa-moon"></i> Modo Oscuro
+    </label>
+</div>
 
   <!-- Contenido principal -->
   <main class="container mt-4">
-    <h1 class="mb-4"><i class="fa fa-shopping-cart text-primary"></i> Mi Carrito de Compras</h1>
+    <div class="text-center p-4"> <h1 class="mb-4"><i class="fa fa-shopping-cart text-primary"></i> Mi Carrito de Compras</h1></div>
 
     <div id="cart-container"></div>
 

@@ -1,60 +1,39 @@
 let productData = null;
 let commentsData = [];
 
-document.addEventListener("DOMContentLoaded", () => {
-  initTheme();
-  updateCartBadge();
-
-  const productId = localStorage.getItem("selectedProductID");
-  if (productId) loadProduct(productId);
-});
-
-async function loadProduct(id) {
-  const [prodRes, commRes] = await Promise.all([
-    fetch(`https://japceibal.github.io/emercado-api/products/${id}.json`),
-    fetch(`https://japceibal.github.io/emercado-api/products_comments/${id}.json`)
-  ]);
-
-  productData = await prodRes.json();
-  commentsData = await commRes.json();
-
-  renderProduct(productData);
-  renderComments(commentsData);
-  renderRelated(productData.relatedProducts);
+function autenticado() {
+    return localStorage.getItem('user') !== null; 
 }
 
-function renderProduct(product) {
-  const container = document.getElementById("product-container");
-  container.innerHTML = `
-    <div class="col-md-6">
-      <img id="main-image" src="${product.images[0]}" class="img-fluid rounded shadow mb-3" alt="${product.name}">
-      <div class="d-flex flex-wrap gap-2">
-        ${product.images.map(img => `<img src="${img}" class="gallery-thumb" style="width:80px; height:80px; cursor:pointer;">`).join("")}
-      </div>
-    </div>
-    <div class="col-md-6">
-      <h2>${product.name}</h2>
-      <p><strong>Categoría:</strong> ${product.category}</p>
-      <p><strong>Precio:</strong> ${product.currency} ${product.cost}</p>
-      <p><strong>Vendidos:</strong> ${product.soldCount}</p>
-      <p>${product.description}</p>
-      <button id="add-cart-btn" class="btn btn-success btn-lg">
-        <i class="fa-solid fa-cart-shopping"></i> Agregar al carrito
-      </button>
-    </div>
-  `;
-
-  document.querySelectorAll(".gallery-thumb").forEach(img => {
-    img.addEventListener("click", e => {
-      document.getElementById("main-image").src = e.target.src;
-    });
-  });
-
-  document.getElementById("add-cart-btn").addEventListener("click", () => {
-    addToCart(product);
-  });
+if (!autenticado()) {
+    window.location.href = "login.html";
 }
 
+// Badge del carrito
+function updateCartBadge() {
+    const savedCart = localStorage.getItem('cart');
+    const totalItems = savedCart ? JSON.parse(savedCart).reduce((total, item) => total + item.quantity, 0) : 0;
+    document.getElementById('cart-badge').textContent = totalItems;
+}
+
+// Función de mensajes
+function mostrarMensaje(mensaje, tipo = 'info') {
+    const existingAlert = document.querySelector('.alert');
+    if (existingAlert) existingAlert.remove();
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show mt-3`;
+    alertDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    const container = document.querySelector('main .container');
+    container.insertBefore(alertDiv, container.firstChild);
+
+    setTimeout(() => { if (alertDiv.parentNode) alertDiv.remove(); }, 3000);
+}
+
+// Agregar producto al carrito
 function addToCart(product) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existing = cart.find(i => i.id === product.id);
@@ -74,85 +53,276 @@ function addToCart(product) {
   alert("Producto agregado al carrito ✅");
 }
 
-// ======== Comentarios ========
-function renderComments(comments) {
-  const container = document.getElementById("comments-container");
-  container.innerHTML = comments.map(c => `
-    <div class="card mb-3 p-3">
-      <div class="d-flex justify-content-between">
-        <strong>${c.user}</strong>
-        <small>${new Date(c.dateTime).toLocaleString()}</small>
-      </div>
-      <div>${'★'.repeat(c.score)}${'☆'.repeat(5 - c.score)}</div>
-      <p class="mb-0">${c.description}</p>
-    </div>
-  `).join("");
+function addProductToCart(productId) {
+    const product = currentProducts.find(p => p.id === productId);
+    if (product) addToCart(product);
 }
 
-document.getElementById("rating-form").addEventListener("submit", e => {
-  e.preventDefault();
-  const text = document.getElementById("comment-text").value.trim();
-  const rating = document.querySelector('input[name="rating"]:checked');
+document.addEventListener("DOMContentLoaded", () => {
+    let user = localStorage.getItem("user");
 
-  if (!text || !rating) return alert("Completa todos los campos.");
-  const newComment = {
-    user: localStorage.getItem("user") || "Anónimo",
-    description: text,
-    score: parseInt(rating.value),
-    dateTime: new Date().toISOString()
-  };
-  commentsData.unshift(newComment);
-  renderComments(commentsData);
-  e.target.reset();
+    document.getElementById("sesion").textContent = user;
+    document.getElementById("perfil").addEventListener("click", function() {
+        window.location = "my-profile.html"});
+    document.getElementById("cerrarsesion").addEventListener("click", function() {
+        localStorage.removeItem("user");
+        window.location = "login.html"
+    });
+
+    // Recuperar el ID del producto
+    const productID = localStorage.getItem("selectedProductID");
+    if (!productID) {
+        document.getElementById("product-container").innerHTML = `<div class="alert alert-danger">No se encontró producto seleccionado.</div>`;
+        return;
+    }
+
+    updateCartBadge();
+
+    // Construir las URLs
+    const productURL = `https://japceibal.github.io/emercado-api/products/${productID}.json`;
+    const commentsURL = `https://japceibal.github.io/emercado-api/products_comments/${productID}.json`;
+
+    // Cargar datos del producto y comentarios
+    Promise.all([
+        getJSONData(productURL),
+        getJSONData(commentsURL)
+    ]).then(([productResult, commentsResult]) => {
+        if (productResult.status === "ok") {
+            productData = productResult.data;
+            mostrarProducto(productData);
+            mostrarRelacionados(productData.relatedProducts);
+        }
+        
+        if (commentsResult.status === "ok") {
+            commentsData = commentsResult.data;
+            mostrarComentarios(commentsData);
+        }
+    });
+
+    // Configurar formulario de calificación
+    configurarFormularioCalificacion();
 });
 
-// ======== Relacionados ========
-function renderRelated(related) {
-  const container = document.getElementById("related-container");
-  container.innerHTML = related.map(r => `
-    <div class="col-sm-6 col-md-4 col-lg-3">
-      <div class="card shadow-sm related-card" data-id="${r.id}">
-        <img src="${r.image}" class="card-img-top" alt="${r.name}" style="height:180px; object-fit:cover;">
-        <div class="card-body text-center">
-          <h6>${r.name}</h6>
-          <p>${r.currency} ${r.cost}</p>
-        </div>
+
+
+function toggleThemeCheckbox() {
+    const checkbox = document.getElementById('themeSwitch');
+    const html = document.documentElement;
+    
+    // Si está marcado = modo oscuro, si no = modo claro
+    if (checkbox.checked) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('themeSwitch');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+// Renderizar el producto principal con galería
+function mostrarProducto(product) {
+    const contenedor = document.getElementById("product-container");
+
+    contenedor.innerHTML = `
+    <div class="col-md-6">
+      <div class="mb-3">
+        <img id="main-image" src="${product.images[0]}" class="img-fluid rounded shadow" alt="${product.name}">
+      </div>
+      <div id="gallery" class="d-flex gap-2 flex-wrap">
+        ${product.images.map((img, index) => `
+          <img src="${img}" class="img-thumbnail gallery-img" 
+               style="width: 100px; height: 100px; object-fit: cover; cursor:pointer;" 
+               data-index="${index}">
+        `).join("")}
       </div>
     </div>
-  `).join("");
+    <div class="col-md-6">
+      <h2 class="fw-bold">${product.name}</h2>
+      <p><strong>Categoría:</strong> ${product.category}</p>
+      <p><strong>Vendidos:</strong> ${product.soldCount}</p>
+      <p>${product.description}</p>
+      <button id="add-cart-btn" class="btn btn-success btn-lg">
+        <i class="fa fa-shopping-cart"></i> Agregar al carrito
+        </button>
+    </div>
+  `;
 
-  document.querySelectorAll(".related-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const newId = card.getAttribute("data-id");
-      localStorage.setItem("selectedProductID", newId);
-      loadProduct(newId);
+    // Evento: cambiar imagen principal al hacer clic en miniatura
+    document.querySelectorAll(".gallery-img").forEach(img => {
+        img.addEventListener("click", (e) => {
+            document.getElementById("main-image").src = e.target.src;
+
+            // Resaltar miniatura activa
+            document.querySelectorAll(".gallery-img").forEach(i => i.classList.remove("border", "border-primary"));
+            e.target.classList.add("border", "border-primary");
+        });
     });
+
+    // Resaltar la primera miniatura como activa
+    const firstImg = document.querySelector(".gallery-img");
+    if (firstImg) firstImg.classList.add("border", "border-primary");
+
+    document.getElementById("add-cart-btn").addEventListener("click", () => {
+    addToCart(product);
   });
 }
 
-// ======== Tema y badge ========
-function initTheme() {
-  const themeSwitch = document.getElementById("themeSwitch");
-  const themeLabel = document.getElementById("themeLabel");
-  const html = document.documentElement;
-  const savedTheme = localStorage.getItem("theme") || "light";
+// Mostrar comentarios y calificaciones
+function mostrarComentarios(comments) {
+    const contenedor = document.getElementById("comments-container");
+    contenedor.innerHTML = "";
 
-  html.setAttribute("data-theme", savedTheme);
-  themeSwitch.checked = savedTheme === "dark";
-  themeLabel.textContent = savedTheme === "dark" ? "Modo Claro" : "Modo Oscuro";
+    if (!comments || comments.length === 0) {
+        contenedor.innerHTML = '<p class="text-muted">No hay calificaciones disponibles.</p>';
+        return;
+    }
 
-  themeSwitch.addEventListener("change", () => {
-    const newTheme = themeSwitch.checked ? "dark" : "light";
-    html.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-    themeLabel.textContent = newTheme === "dark" ? "Modo Claro" : "Modo Oscuro";
-  });
+    comments.forEach(comment => {
+        const starsHTML = generarEstrellas(comment.score);
+        const fecha = new Date(comment.dateTime);
+        
+        contenedor.innerHTML += `
+        <div class="comment-card card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="card-title mb-1">${comment.user}</h6>
+                <small class="text-muted">${fecha.toLocaleDateString('es-ES')} - ${fecha.toLocaleTimeString('es-ES')}</small>
+              </div>
+              <div class="rating-display">
+                ${starsHTML}
+              </div>
+            </div>
+            <p class="card-text">${comment.description}</p>
+          </div>
+        </div>
+        `;
+    });
 }
 
-function updateCartBadge() {
-  const saved = localStorage.getItem("cart");
-  const badge = document.getElementById("cart-badge");
-  if (!badge) return;
-  if (!saved) badge.textContent = 0;
-  else badge.textContent = JSON.parse(saved).reduce((a, b) => a + b.quantity, 0);
+// Generar estrellas para mostrar calificación
+function generarEstrellas(rating) {
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            stars += '<span class="star-filled">★</span>';
+        } else {
+            stars += '<span class="star-empty">★</span>';
+        }
+    }
+    return stars;
 }
+
+// Configurar el formulario de calificación
+function configurarFormularioCalificacion() {
+    const form = document.getElementById('rating-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const commentText = document.getElementById('comment-text').value;
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const user = localStorage.getItem("user");
+        
+        if (!rating) {
+            alert('Por favor, selecciona una calificación.');
+            return;
+        }
+
+        if (!commentText.trim()) {
+            alert('Por favor, escribe un comentario.');
+            return;
+        }
+
+        // Crear nuevo comentario
+        const newComment = {
+            user: user,
+            dateTime: new Date().toISOString(),
+            description: commentText,
+            score: parseInt(rating.value)
+        };
+
+        // Agregar al inicio del array de comentarios
+        commentsData.unshift(newComment);
+        
+        // Actualizar la vista
+        mostrarComentarios(commentsData);
+        
+        // Limpiar formulario
+        form.reset();
+        
+        // Mostrar mensaje de éxito
+        mostrarMensaje('¡Tu calificación ha sido enviada exitosamente!', 'success');
+    });
+}
+
+// Función para mostrar mensajes
+function mostrarMensaje(mensaje, tipo = 'info') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    // Auto-ocultar después de 3 segundos
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+
+// Renderizar productos relacionados
+function mostrarRelacionados(related) {
+    const contenedor = document.getElementById("related-container");
+    contenedor.innerHTML = "";
+
+    if (!related || related.length === 0) {
+        contenedor.innerHTML = '<p class="text-muted">No hay productos relacionados disponibles.</p>';
+        return;
+    }
+
+    related.forEach(prod => {
+        contenedor.innerHTML += `
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 shadow-sm product-related-card" style="cursor:pointer;" onclick="verProducto(${prod.id})">
+            <img src="${prod.image}" class="card-img-top" alt="${prod.name}" 
+                 style="height: 200px; object-fit: cover;">
+            <div class="card-body d-flex align-items-center justify-content-center">
+              <h6 class="card-title text-center mb-0">${prod.name}</h6>
+            </div>
+          </div>
+        </div>
+        `;
+    });
+
+    // Agregar efecto hover a las cards de productos relacionados
+    document.querySelectorAll('.product-related-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+}
+
+// Cuando se hace clic en un producto relacionado
+function verProducto(id) {
+    localStorage.setItem("selectedProductID", id);
+    window.location = "product-info.html";
+}
+
