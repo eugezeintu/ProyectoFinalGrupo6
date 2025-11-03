@@ -61,7 +61,7 @@ function addToCart(product) {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartBadge();
-    mostrarMensaje('Producto agregado al carrito', 'success');
+    alert("Producto agregado al carrito ✅");
 }
 
 function addProductToCart(productId) {

@@ -12,6 +12,44 @@ if (!autenticado()) {
   window.location.href = "login.html";
 }
 
+document.addEventListener("DOMContentLoaded",()=>{
+    let user = localStorage.getItem("user");
+
+    document.getElementById("sesion").textContent = user;
+    document.getElementById("perfil").addEventListener("click", function() {
+        window.location = "my-profile.html"});
+    document.getElementById("cerrarsesion").addEventListener("click", function() {
+        localStorage.removeItem("user");
+        window.location = "login.html"
+    });
+
+    
+})
+
+function toggleThemeCheckbox() {
+    const checkbox = document.getElementById('themeSwitch');
+    const html = document.documentElement;
+    
+    // Si está marcado = modo oscuro, si no = modo claro
+    if (checkbox.checked) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const checkbox = document.getElementById('themeSwitch');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
 // Cargar carrito desde localStorage
 function loadCart() {
   const savedCart = localStorage.getItem('cart');
@@ -223,39 +261,4 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCartPage();
 });
 
-// ==========================
-// 🌗 Modo oscuro / claro con interruptor
-// ==========================
 
-function applyTheme(isDark) {
-  const body = document.body;
-  const navbar = document.getElementById("main-navbar");
-  const themeToggle = document.getElementById("theme-toggle");
-
-  if (isDark) {
-    body.classList.add("dark-mode");
-    navbar.classList.remove("navbar-light", "bg-light");
-    navbar.classList.add("navbar-dark", "bg-dark");
-    themeToggle.checked = true;
-    localStorage.setItem("theme", "dark");
-  } else {
-    body.classList.remove("dark-mode");
-    navbar.classList.remove("navbar-dark", "bg-dark");
-    navbar.classList.add("navbar-light", "bg-light");
-    themeToggle.checked = false;
-    localStorage.setItem("theme", "light");
-  }
-}
-
-// Detectar cambio del switch
-document.addEventListener("change", (e) => {
-  if (e.target && e.target.id === "theme-toggle") {
-    applyTheme(e.target.checked);
-  }
-});
-
-// Aplicar tema guardado
-document.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme") || "light";
-  applyTheme(savedTheme === "dark");
-});
