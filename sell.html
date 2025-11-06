@@ -89,22 +89,13 @@
     
     
   </nav>
-   <div class="form-check form-switch d-flex justify-content-end" 
-            style="position: fixed; top: 80px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;">
-    <input class="form-check-input" 
-           type="checkbox" 
-           id="themeSwitch"
-           style="width: 40px;
-            height: 25px;"
-           onchange="toggleThemeCheckbox()">
-    <label class="form-check-label" for="themeSwitch">
-        <i class="fas fa-moon"></i> Modo Oscuro
-    </label>
-</div>
+
+    <!-- Modo oscuro -->
+  <div class="form-check form-switch position-fixed" style="top:80px;right:20px;">
+    <input class="form-check-input" type="checkbox" id="interruptor" onchange="modonoche()" style="width:40px;height:25px;">
+    <label class="form-check-label" for="interruptor"><i class="fas fa-moon"></i> Modo Oscuro</label>
+  </div>
+  
   <div class="container">
     <div class="text-center p-4">
       <h2>Vender</h2>
