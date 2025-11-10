@@ -9,6 +9,33 @@ if (!autenticado()) {
     window.location.href = "login.html";
 }
 
+// Modo claro y oscuro - Inicio
+function modonoche() {
+    const checkbox = document.getElementById('interruptor');
+    const html = document.documentElement;
+    
+    // Si está marcado = modo oscuro, si no = modo claro
+    if (checkbox.checked) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('modo', 'dark');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('modo', 'light');
+    }
+}
+
+// Cargar estado al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('modo') || 'light';
+    const checkbox = document.getElementById('interruptor');
+    
+    // Marcar o desmarcar según el tema guardado
+    checkbox.checked = (savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+// Modo claro y oscuro - Fin
+
 // Badge del carrito
 function updateCartBadge() {
     const savedCart = localStorage.getItem('cart');
@@ -103,31 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
     configurarFormularioCalificacion();
 });
 
-
-
-function toggleThemeCheckbox() {
-    const checkbox = document.getElementById('themeSwitch');
-    const html = document.documentElement;
-    
-    // Si está marcado = modo oscuro, si no = modo claro
-    if (checkbox.checked) {
-        html.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        html.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-    }
-}
-
-// Cargar estado al iniciar
-document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    const checkbox = document.getElementById('themeSwitch');
-    
-    // Marcar o desmarcar según el tema guardado
-    checkbox.checked = (savedTheme === 'dark');
-    document.documentElement.setAttribute('data-theme', savedTheme);
-});
 
 // Renderizar el producto principal con galería
 function mostrarProducto(product) {

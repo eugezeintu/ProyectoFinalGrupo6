@@ -52,17 +52,7 @@
           </li>
           <li class="nav-item">
           </li>
-        </ul> <!--
-        <ul class="navbar-nav device-width justify-content-between">
-            <a class="nav-link" id="sesion"></a>
-          </li>
-          <li class="nav-item">
-            <a style= "color:brown" class="nav-link" id="cerrarsesion" href =""></a>
-          </li>
-          <li class="nav-item">
-          </li>
         </ul>
-        -->
       </div>
     <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" 
@@ -88,28 +78,18 @@
     
     
   </nav>
-   <div class="form-check form-switch d-flex justify-content-end" 
-            style="position: fixed; top: 80px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;">
-    <input class="form-check-input" 
-           type="checkbox" 
-           id="themeSwitch"
-           style="width: 40px;
-            height: 25px;"
-           onchange="toggleThemeCheckbox()">
-    <label class="form-check-label" for="themeSwitch">
-        <i class="fas fa-moon"></i> Modo Oscuro
-    </label>
-</div>
+ <!-- Modo oscuro -->
+  <div class="form-check form-switch position-fixed" style="top:80px;right:20px;z-index:1050;">
+    <input class="form-check-input" type="checkbox" id="interruptor" onchange="modonoche()" style="width:40px;height:25px;">
+    <label class="form-check-label" for="interruptor"><i class="fas fa-moon"></i> Modo Oscuro</label>
+  </div>
 
   <!-- Contenido principal -->
   <main class="container mt-4">
     <div class="text-center p-4"> <h1 class="mb-4"><i class="fa fa-shopping-cart text-primary"></i> Mi Carrito de Compras</h1></div>
 
-    <div id="cart-container"></div>
+<div id="cart-container"></div>
+
 <!-- Sección de Dirección de Envío -->
 <div class="card mt-4" id="shipping-section" style="display: none;">
   <div class="card-header bg-primary text-white">
@@ -148,10 +128,20 @@
           <small class="text-muted">Campo opcional</small>
         </div>
       </div>
+
+      <!-- Tipo de Envío -->
+      <div class="seccion-envio mt-4">
+        <h5>Tipo de envío</h5>
+        <select id="TipoDeEnvio" class="form-select">
+          <option value="standard">Standard (12 a 15 días) +5%</option>
+          <option value="express">Express (5 a 8 días) +7%</option>
+          <option value="premium">Premium (2 a 5 días) +15%</option>
+        </select>
+      </div>
     </form>
   </div>
 </div>
-
+ 8bd20f949d8c0feb90390a241141462dd21fa690
     <div class="card mt-4">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div class="d-flex flex-column">
