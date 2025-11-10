@@ -261,4 +261,143 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCartPage();
 });
 
+// DIRECCIÓN DE ENVÍO
 
+// Cargar dirección guardada
+function cargarDireccionGuardada() {
+  const direccionGuardada = localStorage.getItem('direccion_envio');
+  if (direccionGuardada) {
+    const direccion = JSON.parse(direccionGuardada);
+    const deptoInput = document.getElementById('departamento');
+    const localidadInput = document.getElementById('localidad');
+    const calleInput = document.getElementById('calle');
+    const numeroInput = document.getElementById('numero');
+    const esquinaInput = document.getElementById('esquina');
+    
+    if (deptoInput) deptoInput.value = direccion.departamento || '';
+    if (localidadInput) localidadInput.value = direccion.localidad || '';
+    if (calleInput) calleInput.value = direccion.calle || '';
+    if (numeroInput) numeroInput.value = direccion.numero || '';
+    if (esquinaInput) esquinaInput.value = direccion.esquina || '';
+  }
+}
+
+// Validar dirección de envío
+function validarDireccion() {
+  const deptoInput = document.getElementById('departamento');
+  const localidadInput = document.getElementById('localidad');
+  const calleInput = document.getElementById('calle');
+  const numeroInput = document.getElementById('numero');
+  
+  if (!deptoInput || !localidadInput || !calleInput || !numeroInput) {
+    return false;
+  }
+  
+  const departamento = deptoInput.value.trim();
+  const localidad = localidadInput.value.trim();
+  const calle = calleInput.value.trim();
+  const numero = numeroInput.value.trim();
+  
+  const shippingForm = document.getElementById('shipping-form');
+  
+  if (shippingForm) {
+    // Resetear validación
+    shippingForm.classList.remove('was-validated');
+  }
+  
+  // Verificar campos vacíos
+  if (!departamento || !localidad || !calle || !numero) {
+    if (shippingForm) {
+      shippingForm.classList.add('was-validated');
+    }
+    mostrarMensaje('Por favor completá todos los campos obligatorios de la dirección de envío', 'warning');
+    
+    // Hacer scroll hacia el formulario
+    const shippingSection = document.getElementById('shipping-section');
+    if (shippingSection) {
+      shippingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return false;
+  }
+  
+  return true;
+}
+
+// Guardar dirección en localStorage
+function guardarDireccion() {
+  const direccion = {
+    departamento: document.getElementById('departamento').value.trim(),
+    localidad: document.getElementById('localidad').value.trim(),
+    calle: document.getElementById('calle').value.trim(),
+    numero: document.getElementById('numero').value.trim(),
+    esquina: document.getElementById('esquina').value.trim()
+  };
+  
+  localStorage.setItem('direccion_envio', JSON.stringify(direccion));
+  console.log('Dirección guardada:', direccion);
+  return direccion;
+}
+
+// Mostrar u ocultar sección de dirección según el carrito
+function toggleShippingSection() {
+  const shippingSection = document.getElementById('shipping-section');
+  if (shippingSection) {
+    if (cart.length > 0) {
+      shippingSection.style.display = 'block';
+      cargarDireccionGuardada();
+    } else {
+      shippingSection.style.display = 'none';
+    }
+  }
+}
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  loadCart();
+  updateCartBadge();
+  renderCartPage();
+    toggleShippingSection();
+  
+  // Botón "Continuar Comprando"
+  const continueBtn = document.getElementById('continue-shopping');
+  if (continueBtn) {
+    continueBtn.addEventListener('click', () => {
+      window.location.href = 'categories.html';
+    });
+  }
+
+  // Botón "Finalizar Compra"
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      // Verificar que haya productos
+      if (cart.length === 0) {
+        mostrarMensaje('Tu carrito está vacío. Agregá productos antes de finalizar la compra.', 'warning');
+        return;
+      }
+
+      // Validar dirección
+      if (validarDireccion()) {
+        const direccion = guardarDireccion();
+        
+        // Mostrar mensaje de éxito con los datos
+        const mensajeExito = `
+          <strong>¡Compra finalizada con éxito!</strong><br>
+          Tu pedido será enviado a:<br>
+          ${direccion.calle} ${direccion.numero}${direccion.esquina ? ' esq. ' + direccion.esquina : ''}<br>
+          ${direccion.localidad}, ${direccion.departamento}
+        `;
+        
+        mostrarMensaje(mensajeExito, 'success');
+        
+        // Opcional: Vaciar el carrito después de la compra
+        // setTimeout(() => {
+        //   cart = [];
+        //   saveCart();
+        //   renderCartPage();
+        //   updateCartBadge();
+        // }, 3000);
+      }
+    });
+  }
+});
