@@ -142,6 +142,69 @@
   </div>
 </div>
 
+<div class="card mt-4" id="payment-section" style="display: none;">
+  <div class="card-header bg-success text-white">
+    <h5 class="mb-0"><i class="fa fa-credit-card"></i> Forma de Pago</h5>
+  </div>
+  <div class="card-body">
+    <form id="payment-form">
+      <div class="mb-3">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="formaPago" id="tarjeta" value="tarjeta">
+          <label class="form-check-label" for="tarjeta">Tarjeta de crédito</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="formaPago" id="transferencia" value="transferencia">
+          <label class="form-check-label" for="transferencia">Transferencia bancaria</label>
+        </div>
+      </div>
+      <div id="tarjetaDetails" class="mt-3" style="display:none;">
+  <label for="numeroTarjeta" class="form-label">Número de tarjeta</label>
+  <input type="text" class="form-control" id="numeroTarjeta" placeholder="XXXX-XXXX-XXXX-XXXX">
+
+  <label class="form-label mt-2">Fecha de expiración</label>
+  <div class="d-flex gap-2">
+    <select class="form-select" id="mesExp">
+      <option value="">Mes</option>
+      <option value="01">Enero</option>
+      <option value="02">Febrero</option>
+      <option value="03">Marzo</option>
+      <option value="04">Abril</option>
+      <option value="05">Mayo</option>
+      <option value="06">Junio</option>
+      <option value="07">Julio</option>
+      <option value="08">Agosto</option>
+      <option value="09">Septiembre</option>
+      <option value="10">Octubre</option>
+      <option value="11">Noviembre</option>
+      <option value="12">Diciembre</option>
+    </select>
+
+    <select class="form-select" id="anioExp">
+      <option value="">Año</option>
+      <script>
+        const anioActual = new Date().getFullYear();
+        for (let i = 0; i < 15; i++) {
+          document.write(`<option value="${anioActual + i}">${anioActual + i}</option>`);
+        }
+      </script>
+    </select>
+  </div>
+
+  <label for="cvv" class="form-label mt-2">CVV</label>
+  <input type="password" class="form-control" id="cvv" maxlength="3" placeholder="123">
+</div>
+
+      <div id="transferenciaDetails" class="mt-3" style="display:none;">
+        <label for="banco" class="form-label">Banco</label>
+        <input type="text" class="form-control" id="banco" placeholder="Nombre del banco">
+        <label for="nroCuenta" class="form-label mt-2">Número de cuenta</label>
+        <input type="text" class="form-control" id="nroCuenta" placeholder="0000-0000-0000">
+      </div>
+    </form>
+  </div>
+</div>
+
     <div class="card mt-4">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div class="d-flex flex-column">
