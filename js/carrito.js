@@ -360,7 +360,108 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();
   renderCartPage();
     toggleShippingSection();
+
+  // ==========================
+  // FORMA DE PAGO
+  // ==========================
+  const tarjeta = document.getElementById('tarjeta');
+  const transferencia = document.getElementById('transferencia');
+  const tarjetaDetails = document.getElementById('tarjetaDetails');
+  const transferenciaDetails = document.getElementById('transferenciaDetails');
+  const paymentSection = document.getElementById('payment-section');
+
+  if (paymentSection && cart.length > 0) {
+    paymentSection.style.display = 'block';
+  }
+
+  document.querySelectorAll('input[name="formaPago"]').forEach(opcion => {
+    opcion.addEventListener('change', () => {
+      if (tarjeta.checked) {
+        tarjetaDetails.style.display = 'block';
+        transferenciaDetails.style.display = 'none';
+      } else if (transferencia.checked) {
+        transferenciaDetails.style.display = 'block';
+        tarjetaDetails.style.display = 'none';
+      }
+    });
+  });
+
+  function validarFormaPago() {
   
+  document.querySelectorAll('.text-danger.form-error').forEach(el => el.remove());
+
+  const seleccion = document.querySelector('input[name="formaPago"]:checked');
+  let valido = true;
+
+  if (!seleccion) {
+    mostrarMensaje('Por favor seleccioná una forma de pago.', 'warning');
+    return false;
+  }
+
+  if (seleccion.value === 'tarjeta') {
+    const numero = document.getElementById('numeroTarjeta');
+    const mes = document.getElementById('mesExp');
+    const anio = document.getElementById('anioExp');
+    const cvv = document.getElementById('cvv');
+
+    if (!numero.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Por favor ingresá el número de tarjeta.';
+      numero.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+
+    if (!mes.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Seleccioná el mes de expiración.';
+      mes.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+
+    if (!anio.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Seleccioná el año de expiración.';
+      anio.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+
+    if (!cvv.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Por favor ingresá el código CVV.';
+      cvv.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+  }
+
+  if (seleccion.value === 'transferencia') {
+    const banco = document.getElementById('banco');
+    const cuenta = document.getElementById('nroCuenta');
+
+    if (!banco.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Por favor ingresá el nombre del banco.';
+      banco.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+
+    if (!cuenta.value.trim()) {
+      const msg = document.createElement('div');
+      msg.className = 'text-danger form-error';
+      msg.textContent = 'Por favor ingresá el número de cuenta.';
+      cuenta.insertAdjacentElement('afterend', msg);
+      valido = false;
+    }
+  }
+
+  return valido;
+}
+
+
   // Botón "Continuar Comprando"
   const continueBtn = document.getElementById('continue-shopping');
   if (continueBtn) {
@@ -401,6 +502,23 @@ document.addEventListener('DOMContentLoaded', () => {
         //   updateCartBadge();
         // }, 3000);
       }
+      if (!validarDireccion()) return;
+
+      // Validar forma de pago
+      if (!validarFormaPago()) return;
+
+      const direccion = guardarDireccion();
+      const formaPago = document.querySelector('input[name="formaPago"]:checked').value;
+
+      const mensajeExito = `
+        <strong>¡Compra finalizada con éxito!</strong><br>
+        Método de pago: ${formaPago.toUpperCase()}<br>
+        Tu pedido será enviado a:<br>
+        ${direccion.calle} ${direccion.numero}${direccion.esquina ? ' esq. ' + direccion.esquina : ''}<br>
+        ${direccion.localidad}, ${direccion.departamento}
+      `;
+      
+      mostrarMensaje(mensajeExito, 'success');
     });
   }
 });
