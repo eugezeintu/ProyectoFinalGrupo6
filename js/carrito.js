@@ -145,6 +145,58 @@ function updateQuantity(productId, newQuantity) {
 window.updateQuantity = updateQuantity;
 
 // ==========================
+// CALCULAR TOTAL CON ENVÍO
+// ==========================
+function calcularTotalConEnvio() {
+  // Calcular subtotal en USD
+  let subtotalUSD = 0;
+  cart.forEach(item => {
+    const itemTotal = item.price * item.quantity;
+    if (item.currency === "USD") {
+      subtotalUSD += itemTotal;
+    } else {
+      subtotalUSD += itemTotal / 40; // convertir pesos a dólares
+    }
+  });
+
+  // Obtener porcentaje de envío
+  const tipoEnvioSelect = document.getElementById('TipoDeEnvio');
+  let porcentajeEnvio = 0;
+  let porcentajeDisplay = 0;
+  
+  if (tipoEnvioSelect) {
+    const tipoEnvio = tipoEnvioSelect.value;
+    switch(tipoEnvio) {
+      case 'standard':
+        porcentajeEnvio = 0.05; // 5%
+        porcentajeDisplay = 5;
+        break;
+      case 'express':
+        porcentajeEnvio = 0.07; // 7%
+        porcentajeDisplay = 7;
+        break;
+      case 'premium':
+        porcentajeEnvio = 0.15; // 15%
+        porcentajeDisplay = 15;
+        break;
+    }
+  }
+
+  // Calcular costo de envío
+  const costoEnvio = subtotalUSD * porcentajeEnvio;
+  
+  // Total final
+  const totalFinal = subtotalUSD + costoEnvio;
+
+  return {
+    subtotal: subtotalUSD,
+    costoEnvio: costoEnvio,
+    total: totalFinal,
+    porcentaje: porcentajeDisplay
+  };
+}
+
+// ==========================
 // Renderizar página de carrito
 // ==========================
 
@@ -172,15 +224,12 @@ function renderCartPage() {
     return;
   }
 
-  let totalUSD = 0;
   let totalItems = 0;
   container.innerHTML = '';
 
   cart.forEach(item => {
     const itemTotal = item.price * item.quantity;
     totalItems += item.quantity;
-    if (item.currency === "USD") totalUSD += itemTotal;
-    else totalUSD += itemTotal / 40; // convertir pesos a dólares
 
     container.innerHTML += `
         <div class="card mb-3">
@@ -218,32 +267,53 @@ function renderCartPage() {
       `;
   });
 
-  // Mostrar total según moneda elegida
-  updateDisplayedTotal(totalUSD, totalItems);
+  // Actualizar total con envío
+  updateDisplayedTotal(totalItems);
 }
 window.renderCartPage = renderCartPage;
 
 // ==========================
-// Mostrar total en USD o UYU
+// Mostrar total en USD o UYU con envío
 // ==========================
 const exchangeRate = 40;
 
-function updateDisplayedTotal(totalUSD, totalItems) {
+function updateDisplayedTotal(totalItems) {
   const currencySelect = document.getElementById("currency-select");
   const totalElement = document.getElementById("cart-total");
   const itemsCountElement = document.getElementById("cart-items-count");
 
   if (!currencySelect || !totalElement) return;
 
+  // Calcular totales con envío
+  const totales = calcularTotalConEnvio();
+  
   const selectedCurrency = currencySelect.value;
-  let displayedTotal;
+  let displayedSubtotal, displayedEnvio, displayedTotal;
 
   if (selectedCurrency === "USD") {
-    displayedTotal = totalUSD;
-    totalElement.textContent = `USD ${displayedTotal.toLocaleString('es-UY', {minimumFractionDigits:2})}`;
+    displayedSubtotal = totales.subtotal;
+    displayedEnvio = totales.costoEnvio;
+    displayedTotal = totales.total;
+    
+    totalElement.innerHTML = `
+      <div class="d-flex flex-column">
+        <div><small class="text-muted">Subtotal: USD ${displayedSubtotal.toLocaleString('es-UY', {minimumFractionDigits:2})}</small></div>
+        <div><small class="text-muted">Envío (${totales.porcentaje}%): USD ${displayedEnvio.toLocaleString('es-UY', {minimumFractionDigits:2})}</small></div>
+        <div class="mt-1"><strong>USD ${displayedTotal.toLocaleString('es-UY', {minimumFractionDigits:2})}</strong></div>
+      </div>
+    `;
   } else {
-    displayedTotal = totalUSD * exchangeRate;
-    totalElement.textContent = `UYU ${displayedTotal.toLocaleString('es-UY', {minimumFractionDigits:2})}`;
+    displayedSubtotal = totales.subtotal * exchangeRate;
+    displayedEnvio = totales.costoEnvio * exchangeRate;
+    displayedTotal = totales.total * exchangeRate;
+    
+    totalElement.innerHTML = `
+      <div class="d-flex flex-column">
+        <div><small class="text-muted">Subtotal: UYU ${displayedSubtotal.toLocaleString('es-UY', {minimumFractionDigits:2})}</small></div>
+        <div><small class="text-muted">Envío (${totales.porcentaje}%): UYU ${displayedEnvio.toLocaleString('es-UY', {minimumFractionDigits:2})}</small></div>
+        <div class="mt-1"><strong>UYU ${displayedTotal.toLocaleString('es-UY', {minimumFractionDigits:2})}</strong></div>
+      </div>
+    `;
   }
 
   if (itemsCountElement)
@@ -253,7 +323,16 @@ function updateDisplayedTotal(totalUSD, totalItems) {
 // Detectar cambio de moneda
 document.addEventListener("change", e => {
   if (e.target && e.target.id === "currency-select") {
-    renderCartPage();
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    updateDisplayedTotal(totalItems);
+  }
+});
+
+// Detectar cambio de tipo de envío
+document.addEventListener("change", e => {
+  if (e.target && e.target.id === "TipoDeEnvio") {
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    updateDisplayedTotal(totalItems);
   }
 });
 
@@ -359,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   updateCartBadge();
   renderCartPage();
-    toggleShippingSection();
+  toggleShippingSection();
 
   // ==========================
   // FORMA DE PAGO
@@ -480,39 +559,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Validar dirección
-      if (validarDireccion()) {
-        const direccion = guardarDireccion();
-        
-        // Mostrar mensaje de éxito con los datos
-        const mensajeExito = `
-          <strong>¡Compra finalizada con éxito!</strong><br>
-          Tu pedido será enviado a:<br>
-          ${direccion.calle} ${direccion.numero}${direccion.esquina ? ' esq. ' + direccion.esquina : ''}<br>
-          ${direccion.localidad}, ${direccion.departamento}
-        `;
-        
-        mostrarMensaje(mensajeExito, 'success');
-        
-        // Opcional: Vaciar el carrito después de la compra
-        // setTimeout(() => {
-        //   cart = [];
-        //   saveCart();
-        //   renderCartPage();
-        //   updateCartBadge();
-        // }, 3000);
-      }
+      // Validar dirección y forma de pago
       if (!validarDireccion()) return;
-
-      // Validar forma de pago
       if (!validarFormaPago()) return;
 
       const direccion = guardarDireccion();
       const formaPago = document.querySelector('input[name="formaPago"]:checked').value;
+      const totales = calcularTotalConEnvio();
+      const currencySelect = document.getElementById("currency-select");
+      const moneda = currencySelect.value;
+      
+      let totalFinal = totales.total;
+      if (moneda === "UYU") {
+        totalFinal = totalFinal * exchangeRate;
+      }
 
       const mensajeExito = `
         <strong>¡Compra finalizada con éxito!</strong><br>
         Método de pago: ${formaPago.toUpperCase()}<br>
+        Total pagado: ${moneda} ${totalFinal.toLocaleString('es-UY', {minimumFractionDigits:2})}<br>
         Tu pedido será enviado a:<br>
         ${direccion.calle} ${direccion.numero}${direccion.esquina ? ' esq. ' + direccion.esquina : ''}<br>
         ${direccion.localidad}, ${direccion.departamento}
