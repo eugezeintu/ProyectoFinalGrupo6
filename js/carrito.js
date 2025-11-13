@@ -12,19 +12,6 @@ if (!autenticado()) {
   window.location.href = "login.html";
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-    let user = localStorage.getItem("user");
-
-    document.getElementById("sesion").textContent = user;
-    document.getElementById("perfil").addEventListener("click", function() {
-        window.location = "my-profile.html"});
-    document.getElementById("cerrarsesion").addEventListener("click", function() {
-        localStorage.removeItem("user");
-        window.location = "login.html"
-    });
-
-    
-})
 
 // Modo claro y oscuro - Inicio
 function modonoche() {
@@ -41,15 +28,6 @@ function modonoche() {
     }
 }
 
-// Cargar estado al iniciar
-document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('modo') || 'light';
-    const checkbox = document.getElementById('interruptor');
-    
-    // Marcar o desmarcar según el tema guardado
-    checkbox.checked = (savedTheme === 'dark');
-    document.documentElement.setAttribute('data-theme', savedTheme);
-});
 
 // Modo claro y oscuro - Fin
 
@@ -455,9 +433,25 @@ function mostrarsecciondireccion() {
     }
   }
 }
+document.addEventListener('DOMContentLoaded', () => {
+  // --- Sessão do usuário ---
+  let user = localStorage.getItem("user");
+  document.getElementById("sesion").textContent = user;
+  document.getElementById("perfil").addEventListener("click", function() {
+      window.location = "my-profile.html"});
+  document.getElementById("cerrarsesion").addEventListener("click", function() {
+      localStorage.removeItem("user");
+      window.location = "login.html"
+  });
+
+  // --- Modo claro y oscuro ---
+  const savedTheme = localStorage.getItem('modo') || 'light';
+  const checkbox = document.getElementById('interruptor');
+  checkbox.checked = (savedTheme === 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
 
 // Inicialización
-document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   updateCartBadge();
   renderCartPage();
