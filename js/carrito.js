@@ -75,22 +75,37 @@ function updateCartBadge() {
 window.updateCartBadge = updateCartBadge;
 
 // Mensajes
-function mostrarMensaje(mensaje, tipo = 'info') {
-  const existingAlert = document.querySelector('.alert');
+  function mostrarMensaje(mensaje, tipo = 'info') {
+const existingAlert = document.querySelector('.custom-global-alert');
   if (existingAlert) existingAlert.remove();
 
+  
   const alertDiv = document.createElement('div');
-  alertDiv.className = `alert alert-${tipo} alert-dismissible fade show mt-3`;
+  alertDiv.className = `alert alert-${tipo} alert-dismissible fade show custom-global-alert`;
+  alertDiv.setAttribute('role', 'alert');
+
+ 
+  alertDiv.style.position = 'fixed';
+  alertDiv.style.top = '20px';
+  alertDiv.style.left = '50%';
+  alertDiv.style.transform = 'translateX(-50%)';
+  alertDiv.style.zIndex = '2100';
+  alertDiv.style.minWidth = '280px';
+  alertDiv.style.maxWidth = '90%';
+  alertDiv.style.boxShadow = '0 6px 18px rgba(0,0,0,0.15)';
+
   alertDiv.innerHTML = `
-      ${mensaje}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div style="padding-right: 40px;">${mensaje}</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" 
+            style="position:absolute;right:8px;top:6px;"></button>
   `;
-  const container = document.querySelector('main .container');
-  if (container) container.insertBefore(alertDiv, container.firstChild);
+
+  document.body.appendChild(alertDiv);
 
   setTimeout(() => { if (alertDiv.parentNode) alertDiv.remove(); }, 5000);
 }
 window.mostrarMensaje = mostrarMensaje;
+
 
 // Agregar producto
 function addToCart(product) {
@@ -122,8 +137,16 @@ function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
     saveCart();
     updateCartBadge();
-    renderCartPage();
-    mostrarMensaje('Producto eliminado del carrito', 'info');
+    
+    // Si el carrito quedó vacío, refrescar la página
+    if (cart.length === 0) {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    } else {
+      renderCartPage();
+      mostrarMensaje('Producto eliminado del carrito', 'info');
+    }
   }
 }
 window.removeFromCart = removeFromCart;
@@ -542,48 +565,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Botón "Continuar Comprando"
-  const continueBtn = document.getElementById('continue-shopping');
-  if (continueBtn) {
-    continueBtn.addEventListener('click', () => {
-      window.location.href = 'categories.html';
-    });
-  }
+const continueBtn = document.getElementById('continue-shopping');
+if (continueBtn) {
+  continueBtn.addEventListener('click', () => {
+    window.location.href = 'categories.html';
+  });
+}
 
-  // Botón "Finalizar Compra"
-  const checkoutBtn = document.getElementById('checkout-btn');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      // Verificar que haya productos
-      if (cart.length === 0) {
-        mostrarMensaje('Tu carrito está vacío. Agregá productos antes de finalizar la compra.', 'warning');
-        return;
-      }
+// Botón "Finalizar Compra"
+const checkoutBtn = document.getElementById('checkout-btn');
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', () => {
+    // Campos de dirección
+    const departamento = document.getElementById('departamento')?.value.trim();
+    const localidad = document.getElementById('localidad')?.value.trim();
+    const calle = document.getElementById('calle')?.value.trim();
+    const numero = document.getElementById('numero')?.value.trim();
 
-      // Validar dirección y forma de pago
-      if (!validarDireccion()) return;
-      if (!validarFormaPago()) return;
+    // Forma de pago seleccionada
+    const seleccionPago = document.querySelector('input[name="formaPago"]:checked');
+    let camposValidos = true;
 
-      const direccion = guardarDireccion();
-      const formaPago = document.querySelector('input[name="formaPago"]:checked').value;
-      const totales = calcularTotalConEnvio();
-      const currencySelect = document.getElementById("currency-select");
-      const moneda = currencySelect.value;
-      
-      let totalFinal = totales.total;
-      if (moneda === "UYU") {
-        totalFinal = totalFinal * exchangeRate;
-      }
+    // Validación dirección
+    if (!departamento || !localidad || !calle || !numero) {
+      camposValidos = false;
+    }
 
-      const mensajeExito = `
-        <strong>¡Compra finalizada con éxito!</strong><br>
-        Método de pago: ${formaPago.toUpperCase()}<br>
-        Total pagado: ${moneda} ${totalFinal.toLocaleString('es-UY', {minimumFractionDigits:2})}<br>
-        Tu pedido será enviado a:<br>
-        ${direccion.calle} ${direccion.numero}${direccion.esquina ? ' esq. ' + direccion.esquina : ''}<br>
-        ${direccion.localidad}, ${direccion.departamento}
-      `;
-      
-      mostrarMensaje(mensajeExito, 'success');
-    });
-  }
+   // Validación forma de pago
+    if (!seleccionPago) {
+      camposValidos = false;
+    } else if (seleccionPago.value === 'tarjeta') {
+      const numeroTarjeta = document.getElementById('numeroTarjeta')?.value.trim();
+      const mesExp = document.getElementById('mesExp')?.value.trim();
+      const anioExp = document.getElementById('anioExp')?.value.trim();
+      const cvv = document.getElementById('cvv')?.value.trim();
+      if (!numeroTarjeta || !mesExp || !anioExp || !cvv) camposValidos = false;
+    } else if (seleccionPago.value === 'transferencia') {
+      const banco = document.getElementById('banco')?.value.trim();
+      const nroCuenta = document.getElementById('nroCuenta')?.value.trim();
+      if (!banco || !nroCuenta) camposValidos = false;
+    }
+
+    // Mostrar mensaje según resultado
+    if (camposValidos) {
+      mostrarMensaje('¡Compra exitosa!', 'success');
+    } else {
+      mostrarMensaje('Por favor completá todos los campos obligatorios antes de finalizar la compra.', 'warning');
+    }
+  });
+}
 });
