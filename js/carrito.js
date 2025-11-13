@@ -421,7 +421,7 @@ function guardarDireccion() {
 }
 
 // Mostrar u ocultar sección de dirección según el carrito
-function toggleShippingSection() {
+function mostrarsecciondireccion() {
   const shippingSection = document.getElementById('shipping-section');
   if (shippingSection) {
     if (cart.length > 0) {
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   updateCartBadge();
   renderCartPage();
-  toggleShippingSection();
+  mostrarsecciondireccion();
 
   // ==========================
   // FORMA DE PAGO
