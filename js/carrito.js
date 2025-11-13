@@ -122,8 +122,16 @@ function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
     saveCart();
     updateCartBadge();
-    renderCartPage();
-    mostrarMensaje('Producto eliminado del carrito', 'info');
+    
+    // Si el carrito quedó vacío, refrescar la página
+    if (cart.length === 0) {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    } else {
+      renderCartPage();
+      mostrarMensaje('Producto eliminado del carrito', 'info');
+    }
   }
 }
 window.removeFromCart = removeFromCart;
