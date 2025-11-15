@@ -609,3 +609,32 @@ if (checkoutBtn) {
   });
 }
 });
+
+// ============================================
+// FUNCIÓN DE COLAPSO - CÓDIGO NUEVO AGREGADO
+// ============================================
+function toggleSection(contentId, iconId) {
+  // Obtener el contenedor del contenido
+  const content = document.getElementById(contentId);
+  
+  // Obtener el ícono (flechita)
+  const icon = document.getElementById(iconId);
+  
+  // Verificar que ambos elementos existan
+  if (content && icon) {
+    
+    // Si está oculto, mostrarlo
+    if (content.style.display === 'none') {
+      content.style.display = 'block';  // Mostrar
+      icon.textContent = '▼';            // Flecha hacia abajo
+    } 
+    // Si está visible, ocultarlo
+    else {
+      content.style.display = 'none';   // Ocultar
+      icon.textContent = '▶';            // Flecha hacia derecha
+    }
+  }
+}
+
+// Hacer la función global para que funcione con onclick en el HTML
+window.toggleSection = toggleSection;
