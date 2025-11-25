@@ -1,10 +1,11 @@
-const CATEGORIES_URL = "https://japceibal.github.io/emercado-api/cats/cat.json";
-const PUBLISH_PRODUCT_URL = "https://japceibal.github.io/emercado-api/sell/publish.json";
-const PRODUCTS_URL = "https://japceibal.github.io/emercado-api/cats_products/";
-const PRODUCT_INFO_URL = "https://japceibal.github.io/emercado-api/products/";
-const PRODUCT_INFO_COMMENTS_URL = "https://japceibal.github.io/emercado-api/products_comments/";
-const CART_INFO_URL = "https://japceibal.github.io/emercado-api/user_cart/";
-const CART_BUY_URL = "https://japceibal.github.io/emercado-api/cart/buy.json";
+// URLs actualizadas para apuntar al servidor local
+const CATEGORIES_URL = "http://localhost:3000/api/cats/cat.json";
+const PUBLISH_PRODUCT_URL = "http://localhost:3000/api/sell/publish.json";
+const PRODUCTS_URL = "http://localhost:3000/api/cats_products/";
+const PRODUCT_INFO_URL = "http://localhost:3000/api/products/";
+const PRODUCT_INFO_COMMENTS_URL = "http://localhost:3000/api/products_comments/";
+const CART_INFO_URL = "http://localhost:3000/api/user_cart/";
+const CART_BUY_URL = "http://localhost:3000/api/cart/buy.json";
 const EXT_TYPE = ".json";
 
 let showSpinner = function(){
@@ -18,11 +19,35 @@ let hideSpinner = function(){
 let getJSONData = function(url){
     let result = {};
     showSpinner();
-    return fetch(url)
+    
+    // Obtener el token de localStorage
+    const token = localStorage.getItem('token');
+    
+    // Configurar headers con el token
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    
+    // Si existe el token, agregarlo al header Authorization
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return fetch(url, {
+      method: 'GET',
+      headers: headers
+    })
     .then(response => {
       if (response.ok) {
         return response.json();
-      }else{
+      } else if (response.status === 401 || response.status === 403) {
+        // Token inválido o expirado - redirigir al login
+        console.error('Token inválido o expirado. Redirigiendo al login...');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+        throw Error('No autorizado');
+      } else {
         throw Error(response.statusText);
       }
     })
