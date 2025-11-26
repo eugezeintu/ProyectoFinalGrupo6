@@ -20,7 +20,7 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 
 // ==================== AUTENTICACIÓN ====================
 
-// POST /login - Endpoint de autenticación
+// POST /login - Endpoint de autenticación (NO protegido)
 app.post('/login', (req, res) => {
   const { usuario, password } = req.body;
 
@@ -68,13 +68,10 @@ app.post('/login', (req, res) => {
   });
 });
 
-  // Proteger todas las rutas /api/* 
-app.use('/api/', verificarToken);
-
-// ==================== RUTAS API ====================
+// ==================== RUTAS API PROTEGIDAS ====================
 
 // 1. Obtener todas las categorías
-app.get('/api/cats/cat.json', (req, res) => {
+app.get('/api/cats/cat.json', verificarToken, (req, res) => {
   const filePath = path.join(__dirname, 'data', 'cats', 'cat.json');
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
@@ -85,7 +82,7 @@ app.get('/api/cats/cat.json', (req, res) => {
 });
 
 // 2. Obtener productos por categoría
-app.get('/api/cats_products/:id.json', (req, res) => {
+app.get('/api/cats_products/:id.json', verificarToken, (req, res) => {
   const categoryId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'cats_products', `${categoryId}.json`);
   
@@ -98,7 +95,7 @@ app.get('/api/cats_products/:id.json', (req, res) => {
 });
 
 // 3. Obtener información de un producto específico
-app.get('/api/products/:id.json', (req, res) => {
+app.get('/api/products/:id.json', verificarToken, (req, res) => {
   const productId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'products', `${productId}.json`);
   
@@ -111,7 +108,7 @@ app.get('/api/products/:id.json', (req, res) => {
 });
 
 // 4. Obtener comentarios de un producto
-app.get('/api/products_comments/:id.json', (req, res) => {
+app.get('/api/products_comments/:id.json', verificarToken, (req, res) => {
   const productId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'products_comments', `${productId}.json`);
   
@@ -124,7 +121,7 @@ app.get('/api/products_comments/:id.json', (req, res) => {
 });
 
 // 5. Obtener carrito de un usuario
-app.get('/api/user_cart/:id.json', (req, res) => {
+app.get('/api/user_cart/:id.json', verificarToken, (req, res) => {
   const userId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'user_cart', `${userId}.json`);
   
@@ -137,7 +134,7 @@ app.get('/api/user_cart/:id.json', (req, res) => {
 });
 
 // 6. Endpoint para publicar producto
-app.get('/api/sell/publish.json', (req, res) => {
+app.get('/api/sell/publish.json', verificarToken, (req, res) => {
   const filePath = path.join(__dirname, 'data', 'sell', 'publish.json');
   
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -149,7 +146,7 @@ app.get('/api/sell/publish.json', (req, res) => {
 });
 
 // 7. Endpoint para compra de carrito
-app.get('/api/cart/buy.json', (req, res) => {
+app.get('/api/cart/buy.json', verificarToken, (req, res) => {
   const filePath = path.join(__dirname, 'data', 'cart', 'buy.json');
   
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -160,7 +157,7 @@ app.get('/api/cart/buy.json', (req, res) => {
   });
 });
 
-// Ruta principal
+// Ruta principal (NO protegida)
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Bienvenido al Backend de eMercado',
