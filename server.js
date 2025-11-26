@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
+const verificarToken = require('./js/authMiddleware');
 const app = express();
 const PORT = 3000;
 
@@ -66,6 +67,9 @@ app.post('/login', (req, res) => {
     usuario: usuario
   });
 });
+
+  // Proteger todas las rutas /api/* 
+app.use('/api/', verificarToken);
 
 // ==================== RUTAS API ====================
 
