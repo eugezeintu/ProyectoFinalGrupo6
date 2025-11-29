@@ -106,8 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCartBadge();
 
     // Construir las URLs
-    const productURL = `https://japceibal.github.io/emercado-api/products/${productID}.json`;
-    const commentsURL = `https://japceibal.github.io/emercado-api/products_comments/${productID}.json`;
+    const productURL = PRODUCT_INFO_URL + productID + ".json";
+    const commentsURL = PRODUCT_INFO_COMMENTS_URL + productID + ".json";
 
     // Cargar datos del producto y comentarios
     Promise.all([
