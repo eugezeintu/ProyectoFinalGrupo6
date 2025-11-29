@@ -59,6 +59,8 @@ app.post('/login', (req, res) => {
     { expiresIn: '2h' }
   );
 
+  
+
   // Respuesta exitosa
   res.json({
     success: true,
@@ -66,6 +68,7 @@ app.post('/login', (req, res) => {
     token: token,
     usuario: usuario
   });
+
 });
 
 // ==================== RUTAS API ====================
