@@ -23,6 +23,28 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.setItem("user",usuario);
     }
   });
+
+  const url = 'http://localhost:3000/login';
+  const data = {
+    name: usuario,
+    email: password
+  };
+
+  fetch(url, {
+  method: 'POST', // Especifica el método de la solicitud
+  headers: {
+    'Content-Type': 'application/json' // Indica que los datos están en formato JSON
+  },
+  body: JSON.stringify(data) // Convierte el objeto JavaScript a una cadena JSON
+  })
+  .then(response => response.json()) // Parsea la respuesta como JSON
+  .then(data => {
+  console.log('Éxito:', data); // Muestra el resultado en la consola
+  })
+  .catch((error) => {
+  console.error('Error:', error); // Maneja los errores
+  });
+
 });
 console.log("login.js cargado correctamente");
 
