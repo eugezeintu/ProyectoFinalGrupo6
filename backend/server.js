@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
-const verificarToken = require('./js/authMiddleware');
+const verificarToken = require('./authMiddleware');
 const app = express();
 const PORT = 3000;
 
@@ -73,8 +73,8 @@ app.post('/login', (req, res) => {
 
 // ==================== RUTAS API ====================
 
-// 1. Obtener todas las categorías (PÚBLICA)
-app.get('/api/cats/cat.json', (req, res) => {
+// 1. Obtener todas las categorías (PROTEGIDA)
+app.get('/api/cats/cat.json', verificarToken, (req, res) => {
   const filePath = path.join(__dirname, 'data', 'cats', 'cat.json');
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
@@ -84,8 +84,8 @@ app.get('/api/cats/cat.json', (req, res) => {
   });
 });
 
-// 2. Obtener productos por categoría (PÚBLICA)
-app.get('/api/cats_products/:id.json', (req, res) => {
+// 2. Obtener productos por categoría (PROTEGIDA)
+app.get('/api/cats_products/:id.json', verificarToken,(req, res) => {
   const categoryId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'cats_products', `${categoryId}.json`);
   
@@ -97,8 +97,8 @@ app.get('/api/cats_products/:id.json', (req, res) => {
   });
 });
 
-// 3. Obtener información de un producto específico (PÚBLICA)
-app.get('/api/products/:id.json', (req, res) => {
+// 3. Obtener información de un producto específico (PROTEGIDA)
+app.get('/api/products/:id.json', verificarToken,(req, res) => {
   const productId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'products', `${productId}.json`);
   
@@ -110,8 +110,8 @@ app.get('/api/products/:id.json', (req, res) => {
   });
 });
 
-// 4. Obtener comentarios de un producto (PÚBLICA)
-app.get('/api/products_comments/:id.json', (req, res) => {
+// 4. Obtener comentarios de un producto (PROTEGIDA)
+app.get('/api/products_comments/:id.json',verificarToken, (req, res) => {
   const productId = req.params.id;
   const filePath = path.join(__dirname, 'data', 'products_comments', `${productId}.json`);
   
