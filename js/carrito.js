@@ -603,6 +603,45 @@ if (checkoutBtn) {
     // Mostrar mensaje según resultado
     if (camposValidos) {
       mostrarMensaje('¡Compra exitosa!', 'success');
+      const usuariocart = localStorage.getItem('user');
+      cart.forEach(item => {
+        let idproduct = item.id;
+        let nameproduct = item.name;
+        let cantidadproduct = item.quantity;
+        let monedaproduct = item.currency;
+        let precioproduct = item.price;
+
+        const dataToSend = {
+          id_usuario: usuariocart,
+          id_producto: idproduct,
+          nombre_producto: nameproduct,
+          cantidad: cantidadproduct,
+          moneda: monedaproduct,
+          precio: precioproduct
+
+       };
+
+      fetch("http://localhost:3000/cart", {
+      method: 'POST',
+      headers: {
+    'Content-Type': 'application/json',
+  },
+        body: JSON.stringify(dataToSend)
+      })
+      .then(response => response.json())
+      .then(data => {
+    console.log('Respuesta del servidor:', data);
+    })
+    .catch(error => {
+      console.log(error);
+    console.error('Error al enviar la petición:', error);
+      });
+
+      })
+
+
+      
+
     } else {
       mostrarMensaje('Por favor completá todos los campos obligatorios antes de finalizar la compra.', 'warning');
     }

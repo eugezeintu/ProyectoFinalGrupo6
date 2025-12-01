@@ -1,4 +1,15 @@
 const express = require('express');
+
+const mariadb = require("mariadb");
+
+const pool = mariadb.createPool({
+  host: "localhost",
+  user: "root",
+  password: "123",
+  database: "ecommerce",
+  connectionLimit: 5,
+});
+
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -160,6 +171,24 @@ app.get('/api/cart/buy.json', verificarToken, (req, res) => {
   });
 });
 
+// POST /cart - Endpoint de carrito
+app.post("/cart",async (req,res)=>{
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const response = await conn.query(
+      'INSERT INTO pedidos(id_usuario, id_producto, nombre_producto, cantidad, moneda, precio)VALUE (?,?,?,?,?,?)',
+      [req.body.id_usuario, req.body.id_producto, req.body.nombre_producto, req.body.cantidad, req.body.moneda, req.body.precio]
+    );
+    res.json({id: parseInt(response.insertId), ...req.body});
+  } catch (error){
+    console.log(error);
+    res.status(500).json({ message: "Se rompió el servidor hola"});
+  } finally {
+    if(conn) conn.release();
+  }
+});
+
 // Ruta principal
 app.get('/', (req, res) => {
   res.json({ 
@@ -172,7 +201,8 @@ app.get('/', (req, res) => {
       comentarios: '/api/products_comments/:id.json',
       carrito: '/api/user_cart/:id.json',
       publicar: '/api/sell/publish.json',
-      comprar: '/api/cart/buy.json'
+      comprar: '/api/cart/buy.json',
+      cart: 'POST /cart'
     }
   });
 });
